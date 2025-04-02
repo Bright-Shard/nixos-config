@@ -3,12 +3,13 @@
   pkgs,
   config,
   ...
-}:
+}@inputs:
 
 with builtins;
 let
   HOSTNAME = replaceStrings [ "\n" ] [ "" ] (readFile ./HOSTNAME);
   home-manager = fetchGit "https://github.com/nix-community/home-manager";
+  CONSTS = import ./consts.nix inputs;
 in
 {
   options = {
@@ -19,6 +20,7 @@ in
     ./hosts/${HOSTNAME}/hardware-configuration.nix
     ./hosts/${HOSTNAME}
     "${home-manager}/nixos"
+    "${fetchTarball "https://github.com/catppuccin/nix/archive/main.tar.gz"}/modules/nixos"
   ];
 
   config =
@@ -28,6 +30,8 @@ in
     in
     mkMerge [
       {
+        catppuccin.enable = true;
+
         boot.loader = {
           grub.device = "nodev";
           grub.efiSupport = true;
@@ -62,7 +66,12 @@ in
             isNormalUser = true;
             extraGroups = [ "wheel" ];
             shell = pkgs.zsh;
+            openssh.authorizedKeys.keys = [ CONSTS.SSH_KEY ];
           };
+        };
+        home-manager.extraSpecialArgs = {
+          inherit CONSTS;
+          inherit hostOptions;
         };
         home-manager.users.bs = import ./users/bs;
 
@@ -85,6 +94,15 @@ in
           vim
           w3m
         ];
+        environment.etc = {
+          # Allows the 1Password browser extension to communicate with the
+          # 1Password app in Zen Browser
+          zen-1password-patch = {
+            target = "1password/custom_allowed_browsers";
+            text = ".zen-wrapped\n";
+            mode = "0755";
+          };
+        };
         fonts.packages = with pkgs; [
           noto-fonts
           noto-fonts-cjk-sans

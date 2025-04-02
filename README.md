@@ -20,6 +20,7 @@ For future me when I inevitably forget how this works in 2 weeks. But feel free 
 - Come up with a unique hostname for the system
 	- You can see already taken hostnames in the `hosts` folder
 - Put the system's hostname in the `HOSTNAME` file
+    - Then ignore it in Git so you don't commit the change: `git update-index --skip-worktree HOSTNAME`
 - Create the host folder:
 	- Make a folder in `hosts`, named exactly the same as the hostname you put in `HOSTNAME`
 	- Put the `hardware-configuration.nix` file that the NixOS installer generates in that host folder
@@ -31,6 +32,7 @@ For future me when I inevitably forget how this works in 2 weeks. But feel free 
 	- You'll probably want to set `hostOptions` in the config. Set `hostOptions.nix` for options.
 - Install NixOS (or run `nixos-rebuild --switch` if installing on top of an existing NixOS setup)
 - Set the password for the `bs` user
+- If the device is going to run Hyprland, set `$mod` and `$altMod` in `hostOptions.hyprlandSettings`
 - Boot into the new install!
 
 If you're wanting to connect this host to the intranet, you'll need to run `tailscale up --login-server https://ts.brightshard.dev`. Then set `hostOptions.syncthingId` to the host's Syncthing ID.

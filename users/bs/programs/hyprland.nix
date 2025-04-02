@@ -23,6 +23,7 @@ in
         wl-clipboard
         grim
         slurp
+        brightnessctl
 
         # Background Services
         xdg-desktop-portal-hyprland
@@ -42,6 +43,11 @@ in
             accel_profile = "flat";
             scroll_method = "on_button_down";
             scroll_button = 274;
+            touchpad.clickfinger_behavior = true;
+            numlock_by_default = true;
+          };
+          gestures = {
+            workspace_swipe = true;
           };
           bind = concatLists [
             [
@@ -53,6 +59,8 @@ in
               "$mod, F, fullscreen"
               "$mod, mouse_down, workspace, e+1"
               "$mod, mouse_up, workspace, e-1"
+              "$mod, o, exec, brightnessctl s 10%+"
+              "$mod, i, exec, brightnessctl s 10%-"
               "CTRL SHIFT, X, exec, grim -g \"$(slurp)\" /dev/stdout | wl-copy -t 'image/png'"
             ]
             (
@@ -64,10 +72,6 @@ in
               in
               concatLists (genList map 10)
             )
-          ];
-          workspace = concatLists [
-            (genList (val: "${toString (val + 1)},monitor:DP-3") 5)
-            (map (val: "${toString val},monitor:HDMI-A-1") ([ 0 ] ++ genList (val: val + 6) 4))
           ];
           bindm = [
             "$mod, mouse:272, movewindow"

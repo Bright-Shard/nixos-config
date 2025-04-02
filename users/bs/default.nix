@@ -6,11 +6,6 @@
 }@inputs:
 
 {
-  _module.args = {
-    CONSTS = import ./consts.nix inputs;
-    hostOptions = inputs.osConfig.hostOptions;
-  };
-
   imports = [
     ./theme.nix
     ./programs/dev.nix
@@ -23,6 +18,8 @@
     pkg:
     builtins.elem (lib.getName pkg) [
       "osu-lazer-bin"
+      "vscode"
+      "vscode-extension-ms-vsliveshare-vsliveshare"
     ];
 
   home = {
