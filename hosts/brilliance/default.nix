@@ -2,6 +2,7 @@
 {
   hostOptions = {
     pc = true;
+    syncthingId = "CMDCB6R-LD2ONBZ-DLOICW3-34NG2ET-3RLCQCV-7NMJC72-TUSXOSH-3A3Q3AU";
 
     hyprlandSettings = with builtins; {
       "$mod" = "SHIFT CTRL ALT SUPER";

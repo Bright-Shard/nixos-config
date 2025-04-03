@@ -1,7 +1,7 @@
 {
   lib,
   pkgs,
-  CONSTS,
+  bsUtils,
   ...
 }@inputs:
 
@@ -10,6 +10,7 @@
     ./theme.nix
     ./programs/dev.nix
     ./programs/hyprland.nix
+    ./programs/syncthing.nix
     "${fetchTarball "https://github.com/catppuccin/nix/archive/main.tar.gz"}/modules/home-manager"
   ];
 
@@ -62,6 +63,9 @@
 
     shellAliases = {
       docker = "podman";
+      # Clears screen and scrollback, instead of just screen:
+      # https://github.com/kovidgoyal/kitty/issues/268#issuecomment-419342337
+      clear = "printf '\033[2J\033[3J\033[1;1H'";
     };
 
     sessionVariables = import ./env.nix;
@@ -81,8 +85,8 @@
     kitty = {
       enable = true;
       font = {
-        name = CONSTS.CODE_FONT;
-        size = CONSTS.CODE_FONT_SIZE - 4;
+        name = bsUtils.codeFont;
+        size = bsUtils.codeFontSize - 4;
       };
     };
     hyprlock = {
@@ -95,7 +99,7 @@
       enable = true;
       publicKeys = [
         {
-          text = CONSTS.PGP_KEY;
+          text = bsUtils.pgpKey;
           trust = 5;
         }
       ];
@@ -109,39 +113,6 @@
       enableZshIntegration = true;
       pinentryPackage = pkgs.pinentry-qt;
       sshKeys = [ "AC30BE46A5E3A3662BA677BCA5999525DB625466" ];
-    };
-    syncthing = rec {
-      enable = true;
-      overrideDevices = true;
-      overrideFolders = true;
-      settings = {
-        devices = {
-          reclaimed = {
-            addresses = [ "tcp://reclaimed.bs" ];
-            id = "5WL5JWE-2QQHT4G-RFFE35O-R5WN6C3-OGKIDEN-OBNSQZR-AL57K7Q-2JZOVQ3";
-          };
-          brilliance = {
-            addresses = [ "tcp://brilliance.bs" ];
-            id = "CMDCB6R-LD2ONBZ-DLOICW3-34NG2ET-3RLCQCV-7NMJC72-TUSXOSH-3A3Q3AU";
-          };
-        };
-        folders =
-          let
-            folder = id: {
-              enable = true;
-              inherit id;
-              devices = builtins.attrNames settings.devices;
-            };
-          in
-          {
-            "~/.config/home-manager" = folder "pwebb-njeml";
-            "~/dev" = folder "jko99-qppnq";
-            "~/hacking" = folder "zceck-haczp";
-            "~/Documents/texts" = folder "ybnvf-fumyf";
-            "~/Photos" = folder "pixel_7_yxha-photos";
-            "~/afia" = folder "symzn-kjmpp";
-          };
-      };
     };
     ollama = {
       enable = true;

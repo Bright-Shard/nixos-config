@@ -1,6 +1,6 @@
 # Programming-related packages.
 
-{ pkgs, CONSTS, ... }:
+{ pkgs, bsUtils, ... }:
 
 {
   home.packages = with pkgs; [
@@ -46,11 +46,11 @@
         restore_on_startup = "none";
         hard_tabs = true;
         tab_size = 3;
-        ui_font_family = CONSTS.CODE_FONT;
-        ui_font_size = CONSTS.CODE_FONT_SIZE;
-        buffer_font_family = CONSTS.CODE_FONT;
+        ui_font_family = bsUtils.codeFont;
+        ui_font_size = bsUtils.codeFontSize;
+        buffer_font_family = bsUtils.codeFont;
         buffer_line_height = "standard";
-        buffer_font_size = CONSTS.CODE_FONT_SIZE;
+        buffer_font_size = bsUtils.codeFontSize;
         soft_wrap = "bounded";
       };
     };
@@ -77,7 +77,7 @@
       signing = {
         signByDefault = true;
         format = "openpgp";
-        key = CONSTS.PGP_KEY_ID;
+        key = bsUtils.pgpKeyGpgId;
       };
       extraConfig = {
         init = {

@@ -20,7 +20,8 @@ in
   };
   syncthingId = mkOption {
     description = "This host's Syncthing ID.";
-    type = types.string;
+    type = types.nullOr types.str;
+    default = null;
   };
   hyprlandSettings = mkOption {
     description = "Additional Hyprland settings for this host.";

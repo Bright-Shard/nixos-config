@@ -2,6 +2,7 @@
   lib,
   pkgs,
   config,
+  bsUtils,
   ...
 }@inputs:
 
@@ -9,7 +10,6 @@ with builtins;
 let
   HOSTNAME = replaceStrings [ "\n" ] [ "" ] (readFile ./HOSTNAME);
   home-manager = fetchGit "https://github.com/nix-community/home-manager";
-  CONSTS = import ./consts.nix inputs;
 in
 {
   options = {
@@ -30,6 +30,11 @@ in
     in
     mkMerge [
       {
+        _module.args = {
+          bsUtils = import ./utils.nix (inputs // { inherit HOSTNAME; });
+          hostOptions = config.hostOptions;
+        };
+
         catppuccin.enable = true;
 
         boot.loader = {
@@ -66,14 +71,16 @@ in
             isNormalUser = true;
             extraGroups = [ "wheel" ];
             shell = pkgs.zsh;
-            openssh.authorizedKeys.keys = [ CONSTS.SSH_KEY ];
+            openssh.authorizedKeys.keys = [ bsUtils.sshKey ];
           };
         };
-        home-manager.extraSpecialArgs = {
-          inherit CONSTS;
-          inherit hostOptions;
+        home-manager = {
+          extraSpecialArgs = {
+            inherit bsUtils;
+            inherit hostOptions;
+          };
+          users.bs = import ./users/bs;
         };
-        home-manager.users.bs = import ./users/bs;
 
         hardware = {
           graphics = (
@@ -97,9 +104,12 @@ in
         environment.etc = {
           # Allows the 1Password browser extension to communicate with the
           # 1Password app in Zen Browser
-          zen-1password-patch = {
-            target = "1password/custom_allowed_browsers";
-            text = ".zen-wrapped\n";
+          #
+          # TODO: This is currently broken. It seems the zen binary also needs
+          # to be owned by the same user `1password` is running as. However,
+          # it's currently installed by NixOS as root.
+          "1password/custom_allowed_browsers" = {
+            text = ".zen-wrapped";
             mode = "0755";
           };
         };
@@ -117,6 +127,7 @@ in
           pkg:
           builtins.elem (lib.getName pkg) [
             "1password"
+            "1password-cli"
             "steam"
             "steam-unwrapped"
           ];
@@ -146,6 +157,7 @@ in
         programs = {
           steam.enable = true;
           _1password-gui.enable = true;
+          _1password.enable = true;
           dconf.enable = true;
         };
       })
