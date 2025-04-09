@@ -4,7 +4,7 @@
   hostname = HOSTNAME;
 
   # Font settings
-  codeFont = "ShureTechMono Nerd Font";
+  codeFont = "ShureTechMono Nerd Font Propo";
   codeFontSize = 18;
 
   # Public keys

@@ -1,6 +1,7 @@
 {
   pkgs,
   lib,
+  bsUtils,
   ...
 }@inputs:
 
@@ -30,11 +31,24 @@ in
         xdg-desktop-portal-gtk
         dunst
         hyprpolkitagent
+
+        # Extremely crucial package
+        # I'd die without it
+        # Seriously, where would the world be
+        pipes
       ];
 
       wayland.windowManager.hyprland = with builtins; {
         enable = true;
+        systemd.enable = true;
         settings = {
+          exec-once = [
+            "eww daemon"
+            "eww update isLaptop=${toString hostOptions.laptop}"
+          ];
+          general = {
+            gaps_out = 12;
+          };
           decoration = {
             rounding = 10;
             inactive_opacity = ".8";
@@ -48,6 +62,7 @@ in
           };
           gestures = {
             workspace_swipe = true;
+            workspace_swipe_use_r = true;
           };
           bind = concatLists [
             [
@@ -59,8 +74,9 @@ in
               "$mod, F, fullscreen"
               "$mod, mouse_down, workspace, e+1"
               "$mod, mouse_up, workspace, e-1"
-              "$mod, o, exec, brightnessctl s 10%+"
-              "$mod, i, exec, brightnessctl s 10%-"
+              "$mod, O, exec, brightnessctl s 10%+"
+              "$mod, I, exec, brightnessctl s 10%-"
+              "$mod, B, exec, if [ \"$(eww active-windows | grep bar)\" = \"bar: bar\" ]; then eww close bar; else eww open bar; fi"
               "CTRL SHIFT, X, exec, grim -g \"$(slurp)\" /dev/stdout | wl-copy -t 'image/png'"
             ]
             (
@@ -78,6 +94,29 @@ in
             "$mod, mouse:273, resizewindow"
           ];
         };
+      };
+
+      programs = {
+        hyprlock = {
+          enable = true;
+          settings = {
+            general.hide_cursor = true;
+          };
+        };
+        # Enable waybar so catppuccin adds the css theme file,
+        # which we then import into eww
+        waybar = {
+          enable = true;
+        };
+        eww = {
+          enable = true;
+          configDir = ./eww;
+        };
+      };
+
+      services = {
+        dunst.enable = true;
+        gnome-keyring.enable = true;
       };
     }
 

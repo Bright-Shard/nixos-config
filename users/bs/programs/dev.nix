@@ -5,9 +5,12 @@
 {
   home.packages = with pkgs; [
     zed-editor
+
     nixd
     nixfmt-rfc-style
+
     rustup
+    clang
   ];
 
   programs = {
@@ -21,6 +24,7 @@
       enable = true;
       extensions = [
         "nix"
+        "toml"
       ];
       userKeymaps = [
         {
@@ -43,6 +47,12 @@
             ];
           };
         };
+        ssh_connections = [
+          {
+            host = "reclaimed.bs";
+            projects = [ { paths = [ "/home/bs" ]; } ];
+          }
+        ];
         restore_on_startup = "none";
         hard_tabs = true;
         tab_size = 3;
@@ -52,6 +62,8 @@
         buffer_line_height = "standard";
         buffer_font_size = bsUtils.codeFontSize;
         soft_wrap = "bounded";
+        load_direnv = "shell_hook";
+        tab_bar.show = false;
       };
     };
     git = {
@@ -84,6 +96,13 @@
           defaultBranch = "main";
         };
       };
+    };
+  };
+
+  services = {
+    podman = {
+      enable = true;
+      settings.registries.insecure = [ "docker.io" ];
     };
   };
 }

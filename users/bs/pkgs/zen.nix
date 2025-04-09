@@ -3,11 +3,11 @@
 { appimageTools, fetchurl, ... }:
 let
   pname = "zen";
-  version = "latest";
+  version = "1.11.1b";
 
   src = fetchurl {
-    url = "https://github.com/zen-browser/desktop/releases/latest/download/zen-x86_64.AppImage";
-    sha256 = "sha256-H3rxDi0xoN7xYSysmOndZE6feQVO7UgZLE7DSwN30AQ=";
+    url = "https://github.com/zen-browser/desktop/releases/download/${version}/zen-x86_64.AppImage";
+    sha256 = "sha256-aIZt2RUGjVFEF1VzeaKNhkQgusoqGrQTdzGisbg+GgM=";
   };
 
   appimageContents = appimageTools.extract {
@@ -23,6 +23,17 @@ appimageTools.wrapType2 {
     # Install icon
     install -m 444 -D ${appimageContents}/zen.png $out/share/icons/hicolor/128x128/apps/${pname}.png
   '';
+
+  extraPkgs =
+    pkgs: with pkgs; [
+      gtk3
+      adwaita-icon-theme
+      alsa-lib
+      dbus-glib
+      curl
+      libva.out
+      pciutils
+    ];
 
   meta = {
     platforms = [ "x86_64-linux" ];

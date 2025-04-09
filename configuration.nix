@@ -64,6 +64,11 @@ in
               PermitRootLogin = "no";
             };
           };
+          avahi = {
+            enable = true;
+            nssmdns4 = true;
+            nssmdns6 = true;
+          };
         };
 
         users.users = {
@@ -114,10 +119,12 @@ in
           };
         };
         fonts.packages = with pkgs; [
-          noto-fonts
-          noto-fonts-cjk-sans
-          noto-fonts-emoji
           nerd-fonts.shure-tech-mono
+          noto-fonts
+          noto-fonts-lgc-plus
+          noto-fonts-cjk-sans
+          noto-fonts-monochrome-emoji
+          noto-fonts-emoji-blob-bin
         ];
 
         programs = {

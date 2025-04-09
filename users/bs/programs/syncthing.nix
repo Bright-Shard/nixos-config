@@ -41,7 +41,7 @@ in
           };
         in
         {
-          "~/etc/nixos" = folder "pwebble-njeml";
+          "/etc/nixos" = folder "pwebble-njeml";
           "~/dev" = folder "jko99-qppnq";
           "~/hacking" = folder "zceck-haczp";
           "~/Documents/texts" = folder "ybnvf-fumyf";

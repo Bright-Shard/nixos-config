@@ -18,6 +18,10 @@ in
     description = "Whether this host is a PC or a server. When this option is enabled, additional PC apps (like Steam) will be installed.";
     type = types.bool;
   };
+  laptop = mkOption {
+    description = "If this host is a laptop. Enables laptop-specific configs like a battery widget.";
+    type = types.bool;
+  };
   syncthingId = mkOption {
     description = "This host's Syncthing ID.";
     type = types.nullOr types.str;

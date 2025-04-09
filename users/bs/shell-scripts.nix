@@ -1,3 +1,0 @@
-# Small shell scripts.
-
-{ }

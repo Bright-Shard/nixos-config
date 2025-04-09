@@ -5,23 +5,35 @@
   ...
 }@inputs:
 
+let
+  isNixFile =
+    with builtins;
+    file: (stringLength file) > 4 && (substring (stringLength file - 4) 4 file) == ".nix";
+in
 {
-  imports = [
-    ./theme.nix
-    ./programs/dev.nix
-    ./programs/hyprland.nix
-    ./programs/syncthing.nix
-    "${fetchTarball "https://github.com/catppuccin/nix/archive/main.tar.gz"}/modules/home-manager"
-  ];
+  imports =
+    with builtins;
+    [
+      ./theme.nix
+      "${fetchTarball "https://github.com/catppuccin/nix/archive/main.tar.gz"}/modules/home-manager"
+    ]
+    ++ (map (file: ./programs/${file}) (filter isNixFile (attrNames (readDir ./programs))));
 
   manual.html.enable = true;
-  nixpkgs.config.allowUnfreePredicate =
-    pkg:
-    builtins.elem (lib.getName pkg) [
-      "osu-lazer-bin"
-      "vscode"
-      "vscode-extension-ms-vsliveshare-vsliveshare"
+  nixpkgs.config = {
+    allowUnfreePredicate =
+      pkg:
+      builtins.elem (lib.getName pkg) [
+        "osu-lazer-bin"
+        "vscode"
+        "vscode-extension-ms-vsliveshare-vsliveshare"
+      ];
+    permittedInsecurePackages = [
+      # https://github.com/krille-chan/fluffychat/issues/1258
+      "fluffychat-linux-1.25.1"
+      "olm-3.2.16"
     ];
+  };
 
   home = {
     username = "bs";
@@ -31,70 +43,45 @@
     packages =
       with pkgs;
       with inputs;
+      with builtins;
       [
         # Apps
-        (callPackage ./pkgs/zen.nix { })
         vesktop
+        signal-desktop
+        fluffychat
+
+        # Utilities
         fastfetch
+        nmap
+        socat
+        jq
+        obs-studio
+        obs-studio-plugins.input-overlay
+        tailscale
 
         # Games
         osu-lazer-bin
-
-        # Dev
-        tailscale
-        podman
+        prismlauncher
 
         # Misc
         font-manager
         fcitx5
         fcitx5-mozc
 
-        # Monitors
+        # System Monitors
         nvtopPackages.amd
         bottom
-
-        # Shell Scripts
-        (writeShellScriptBin "sysupdate" ''
-          	sudo nix-channel --update
-            sudo nixos-rebuild switch
-            home-manager switch
-        '')
-      ];
-
-    shellAliases = {
-      docker = "podman";
-      # Clears screen and scrollback, instead of just screen:
-      # https://github.com/kovidgoyal/kitty/issues/268#issuecomment-419342337
-      clear = "printf '\033[2J\033[3J\033[1;1H'";
-    };
+      ]
+      # Custom packages
+      ++ (map (file: pkgs.callPackage ./pkgs/${file} { }) (
+        filter isNixFile (attrNames (readDir ./pkgs))
+      ));
 
     sessionVariables = import ./env.nix;
   };
 
   programs = {
     home-manager.enable = true;
-    zsh = {
-      enable = true;
-      dotDir = ".config/zsh";
-      history.path = "/dev/null";
-    };
-    starship = {
-      enable = true;
-      enableZshIntegration = true;
-    };
-    kitty = {
-      enable = true;
-      font = {
-        name = bsUtils.codeFont;
-        size = bsUtils.codeFontSize - 4;
-      };
-    };
-    hyprlock = {
-      enable = true;
-      settings = {
-        general.hide_cursor = true;
-      };
-    };
     gpg = {
       enable = true;
       publicKeys = [
