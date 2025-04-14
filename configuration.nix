@@ -149,25 +149,50 @@ in
           gpgSmartcards.enable = true;
         };
 
-        environment.systemPackages = with pkgs; [
-          git
-          vim
-          w3m
-          zed-editor
-          busybox
-        ];
-        environment.etc = {
-          # Allows the 1Password browser extension to communicate with the
-          # 1Password app in Zen Browser
-          #
-          # TODO: This is currently broken. It seems the zen binary also needs
-          # to be owned by the same user `1password` is running as. However,
-          # it's currently installed by NixOS as root.
-          "1password/custom_allowed_browsers" = {
-            text = ".zen-wrapped";
-            mode = "0755";
+        environment = {
+          systemPackages = with pkgs; [
+            git
+            vim
+            w3m
+            busybox
+          ];
+          etc = {
+            # Allows the 1Password browser extension to communicate with the
+            # 1Password app in Zen Browser
+            #
+            # TODO: This is currently broken. It seems the zen binary also needs
+            # to be owned by the same user `1password` is running as. However,
+            # it's currently installed by NixOS as root.
+            "1password/custom_allowed_browsers" = {
+              text = ".zen-wrapped";
+              mode = "0755";
+            };
           };
         };
+
+        # Put /etc/nixos under nixSync so nixSync can sync it w/
+        # Syncthing, but give bs access to .git and users/bs so
+        # I can make commits and change user-level settings w/o
+        # sudo.
+        systemd.tmpfiles.settings = {
+          "10-nixperms" = {
+            "/etc/nixos".Z = {
+              user = "nixSync";
+              group = "nixSync";
+            };
+            "/etc/nixos/.git".Z = {
+              user = "bs";
+              group = "nixSync";
+              mode = "0770";
+            };
+            "/etc/nixos/users/bs".Z = {
+              user = "bs";
+              group = "nixSync";
+              mode = "0770";
+            };
+          };
+        };
+
         fonts.packages = with pkgs; [
           nerd-fonts.shure-tech-mono
           noto-fonts
