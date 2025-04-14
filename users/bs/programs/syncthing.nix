@@ -41,12 +41,13 @@ in
           };
         in
         {
-          "/etc/nixos" = folder "pwebble-njeml";
           "~/dev" = folder "jko99-qppnq";
           "~/hacking" = folder "zceck-haczp";
           "~/Documents/texts" = folder "ybnvf-fumyf";
           "~/Photos" = folder "pixel_7_yxha-photos";
           "~/afia" = folder "symzn-kjmpp";
+          "~/.local/share/osu" = folder "osu-727";
+          "~/.zen" = folder "zen-sync";
         };
     };
   };

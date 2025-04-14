@@ -45,6 +45,7 @@ in
           exec-once = [
             "eww daemon"
             "eww update isLaptop=${toString hostOptions.laptop}"
+            "fcitx5 -d"
           ];
           general = {
             gaps_out = 12;

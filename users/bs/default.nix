@@ -9,6 +9,12 @@ let
   isNixFile =
     with builtins;
     file: (stringLength file) > 4 && (substring (stringLength file - 4) 4 file) == ".nix";
+  zen = import (pkgs.fetchFromGitHub {
+    owner = "0xc000022070";
+    repo = "zen-browser-flake";
+    rev = "main";
+    hash = "sha256-XOPpnwypaigN7TnRcIkk8PIoWIWg6ZGEWaGYL5e5ShA=";
+  }) { };
 in
 {
   imports =
@@ -46,6 +52,7 @@ in
       with builtins;
       [
         # Apps
+        zen.default
         vesktop
         signal-desktop
         fluffychat
@@ -58,6 +65,10 @@ in
         obs-studio
         obs-studio-plugins.input-overlay
         tailscale
+        kdePackages.dolphin
+        kdePackages.gwenview
+        ffmpeg
+        inotify-tools
 
         # Games
         osu-lazer-bin
@@ -65,8 +76,6 @@ in
 
         # Misc
         font-manager
-        fcitx5
-        fcitx5-mozc
 
         # System Monitors
         nvtopPackages.amd
@@ -107,6 +116,14 @@ in
       environmentVariables = {
         HSA_OVERRIDE_GFX_VERSION = "10.3.0";
       };
+    };
+  };
+
+  i18n.inputMethod = {
+    enabled = "fcitx5";
+    fcitx5 = {
+      addons = with pkgs; [ fcitx5-mozc ];
+      waylandFrontend = true;
     };
   };
 }

@@ -42,6 +42,9 @@ in
           grub.efiSupport = true;
           efi.canTouchEfiVariables = true;
         };
+        # Bypass workqueues for all LUKS devices
+        # This is a performance optimisation: https://search.nixos.org/options?channel=unstable&show=boot.initrd.luks.devices.%3Cname%3E.bypassWorkqueues&from=0
+        boot.initrd.luks.devices = mapAttrs (name: value: { bypassWorkqueues = true; }) (bsUtils.hosts.${HOSTNAME}.boot.initrd.luks.devices);
 
         networking = {
           hostName = HOSTNAME;
@@ -51,7 +54,30 @@ in
         time.timeZone = "America/New_York";
         i18n.defaultLocale = "en_US.UTF-8";
 
+        users = {
+          groups = {
+            nixSync = { };
+          };
+          users = {
+            bs = {
+              isNormalUser = true;
+              extraGroups = [ "wheel" ];
+              shell = pkgs.zsh;
+              openssh.authorizedKeys.keys = [ bsUtils.sshKey ];
+            };
+            # Dedicated user for syncing my nixOS config - see the syncthing cfg
+            # below
+            nixSync = {
+              isNormalUser = true;
+              home = "/var/nixSync";
+              group = "nixSync";
+              extraGroups = [ "users" ];
+            };
+          };
+        };
+
         services = {
+          envfs.enable = true;
           pipewire = {
             enable = true;
             pulse.enable = true;
@@ -69,16 +95,38 @@ in
             nssmdns4 = true;
             nssmdns6 = true;
           };
-        };
-
-        users.users = {
-          bs = {
-            isNormalUser = true;
-            extraGroups = [ "wheel" ];
-            shell = pkgs.zsh;
-            openssh.authorizedKeys.keys = [ bsUtils.sshKey ];
+          # Sync nixOS config to my server automatically.
+          syncthing = {
+            enable = true;
+            group = "nixSync";
+            user = "nixSync";
+            dataDir = "/var/nixSync";
+            configDir = "/var/nixSync/config";
+            guiAddress = "localhost:8385";
+            openDefaultPorts = false;
+            settings = {
+              options = {
+                listenAddresses = [ "quic://:22001" "tcp://:22001" ];
+                localAnnounceEnabled = false;
+              };
+              folders = {
+                "/etc/nixos" = {
+                  label = "NixOS Config";
+                  id = "wanwan";
+                  devices = [ "reclaimed" ];
+                };
+              };
+              devices = {
+                reclaimed = {
+                  addresses = [ "tcp://reclaimed.bs" ];
+                  id = "5WL5JWE-2QQHT4G-RFFE35O-R5WN6C3-OGKIDEN-OBNSQZR-AL57K7Q-2JZOVQ3";
+                  autoAcceptFolders = false;
+                };
+              };
+            };
           };
         };
+
         home-manager = {
           extraSpecialArgs = {
             inherit bsUtils;
@@ -105,6 +153,8 @@ in
           git
           vim
           w3m
+          zed-editor
+          busybox
         ];
         environment.etc = {
           # Allows the 1Password browser extension to communicate with the

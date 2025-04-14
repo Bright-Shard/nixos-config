@@ -4,8 +4,6 @@
 
 {
   home.packages = with pkgs; [
-    zed-editor
-
     nixd
     nixfmt-rfc-style
 
@@ -25,6 +23,7 @@
       extensions = [
         "nix"
         "toml"
+        "log"
       ];
       userKeymaps = [
         {
@@ -95,6 +94,7 @@
         init = {
           defaultBranch = "main";
         };
+        safe.directory = [ "/etc/nixos" ];
       };
     };
   };

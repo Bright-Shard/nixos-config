@@ -48,6 +48,7 @@
               }
 
               ./hosts/${hostName}
+              ./hosts/${hostName}/hardware-configuration.nix
             ] ++ import <nixpkgs/nixos/modules/module-list.nix>;
             specialArgs = inputs;
           }).config;
