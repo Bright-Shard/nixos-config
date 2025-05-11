@@ -57,11 +57,12 @@ in
         users = {
           groups = {
             nixSync = { };
+            plugdev = { };
           };
           users = {
             bs = {
               isNormalUser = true;
-              extraGroups = [ "wheel" ];
+              extraGroups = [ "wheel" "plugdev" ];
               shell = pkgs.zsh;
               openssh.authorizedKeys.keys = [ bsUtils.sshKey ];
             };
@@ -78,10 +79,16 @@ in
 
         services = {
           envfs.enable = true;
+          udev.extraRules = ''
+            # Adafruit: https://learn.adafruit.com/circuitpython-libraries-on-any-computer-with-mcp2221/linux
+            SUBSYSTEMS=="usb", ACTION=="add", ATTRS{idVendor}=="04d8", ATTRS{idProduct}=="00dd", GROUP="plugdev", MODE="0666"
+          '';
           pipewire = {
             enable = true;
             pulse.enable = true;
             wireplumber.enable = true;
+            alsa.enable = true;
+            jack.enable = true;
           };
           openssh = {
             enable = true;
@@ -237,7 +244,10 @@ in
       (mkIf hostOptions.pc {
         services.printing.enable = true;
         programs = {
-          steam.enable = true;
+          steam = {
+            enable = true;
+            extraCompatPackages = with pkgs; [ proton-ge-bin ];
+          };
           _1password-gui.enable = true;
           _1password.enable = true;
           dconf.enable = true;

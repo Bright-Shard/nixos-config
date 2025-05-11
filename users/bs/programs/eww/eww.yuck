@@ -117,12 +117,12 @@
 		; single-digit percents
 		; Otherwise the CPU and RAM icons get ever so slightly
 		; misaligned since the text is centered
-		(label :text " ${EWW_CPU.avg < 10 ? "0${round(EWW_CPU.avg, 1)}" : round(EWW_CPU.avg, 1)}%")
+		(label :text " ${round(EWW_CPU.avg, 1) < 10 ? "0${round(EWW_CPU.avg, 1)}" : round(EWW_CPU.avg, 1)}%")
 
-		(label :text " ${EWW_RAM.used_mem_perc < 10 ? "0${round(EWW_RAM.used_mem_perc, 1)}" : round(EWW_RAM.used_mem_perc, 1)}%")
+		(label :text " ${round(EWW_RAM.used_mem_perc, 1) < 10 ? "0${round(EWW_RAM.used_mem_perc, 1)}" : round(EWW_RAM.used_mem_perc, 1)}%")
 
 		(label
-			:text "${batteryIcon} ${EWW_BATTERY.BAT1.capacity < 10.0 ? "0${EWW_BATTERY.BAT1.capacity}" : EWW_BATTERY.BAT1.capacity}%  "
+			:text "${batteryIcon} ${EWW_BATTERY.BAT1.capacity < 10 ? "0${EWW_BATTERY.BAT1.capacity}" : EWW_BATTERY.BAT1.capacity}%  "
 			; Hide it on desktop computers
 			:style { !isLaptop ? "font-size: 0px;" : "" }
 		)

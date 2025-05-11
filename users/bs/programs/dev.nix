@@ -6,6 +6,7 @@
   home.packages = with pkgs; [
     nixd
     nixfmt-rfc-style
+    python313Packages.python-lsp-server
 
     rustup
     clang
@@ -24,6 +25,7 @@
         "nix"
         "toml"
         "log"
+        "swift"
       ];
       userKeymaps = [
         {
@@ -63,22 +65,15 @@
         soft_wrap = "bounded";
         load_direnv = "shell_hook";
         tab_bar.show = false;
+        file_scan_exclusions = [ ];
+        inlay_hints.enabled = true;
+        edit_predictions.mode = "subtle";
       };
     };
     git = {
       enable = true;
       userName = "BrightShard";
       userEmail = "brightshard@brightshard.dev";
-      aliases = {
-        mm = ''
-          		BRANCH=$(git branch --show-current)
-               MAIN=$(git branch --points-at origin/HEAD)
-               git checkout $MAIN
-               git pull
-               git checkout $BRANCH
-               git merge $MAIN
-        '';
-      };
       ignores = [
         # Files created by Syncthing that shouldn't be committed
         ".stfolder"

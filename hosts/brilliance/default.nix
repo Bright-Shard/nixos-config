@@ -1,4 +1,8 @@
 { ... }:
+let
+  mainMonitor = "DP-2";
+  sideMonitor = "HDMI-A-1";
+in
 {
   hostOptions = {
     pc = true;
@@ -10,12 +14,12 @@
       "$altMod" = "SHIFT CTRL ALT";
       monitor = [
         # name, resolution, position, scale
-        "DP-3, 2560x1440@180.00Hz, auto, auto"
-        "HDMI-A-1, preferred, auto, auto, transform, 1"
+        "${mainMonitor}, 2560x1440@180.00Hz, auto, auto"
+        "${sideMonitor}, preferred, auto, auto, transform, 1"
       ];
       workspace = concatLists [
-        (genList (val: "${toString (val + 1)},monitor:DP-3") 5)
-        (map (val: "${toString val},monitor:HDMI-A-1") ([ 0 ] ++ genList (val: val + 6) 4))
+        (genList (val: "${toString (val + 1)},monitor:${mainMonitor}") 5)
+        (map (val: "${toString val},monitor:${sideMonitor}") ([ 0 ] ++ genList (val: val + 6) 4))
       ];
     };
   };

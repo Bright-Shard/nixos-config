@@ -16,6 +16,15 @@
       (writeShellScriptBin "docker" ''
         podman "$@"
       '')
+      # Allows you to run "git mm" to merge the current branch with master
+      (writeShellScriptBin "git-mm" ''
+        branch=$(git branch --show-current)
+        main=$(git branch --points-at origin/HEAD | head -n 1)
+        git checkout $main
+        git pull
+        git checkout $branch
+        git merge $main
+      '')
     ];
   };
 

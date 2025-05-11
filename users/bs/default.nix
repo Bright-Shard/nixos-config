@@ -13,7 +13,7 @@ let
     owner = "0xc000022070";
     repo = "zen-browser-flake";
     rev = "main";
-    hash = "sha256-XOPpnwypaigN7TnRcIkk8PIoWIWg6ZGEWaGYL5e5ShA=";
+    hash = "sha256-L1NQFK3X4e0Xidw7D7ECQv3G+j4fXkxW7ITGZkjIk8s=";
   }) { };
 in
 {
@@ -36,7 +36,7 @@ in
       ];
     permittedInsecurePackages = [
       # https://github.com/krille-chan/fluffychat/issues/1258
-      "fluffychat-linux-1.25.1"
+      "fluffychat-linux-1.26.0"
       "olm-3.2.16"
     ];
   };
@@ -56,6 +56,8 @@ in
         vesktop
         signal-desktop
         fluffychat
+        mpv
+        tor-browser
 
         # Utilities
         fastfetch
@@ -69,6 +71,7 @@ in
         kdePackages.gwenview
         ffmpeg
         inotify-tools
+        yt-dlp
 
         # Games
         osu-lazer-bin
