@@ -10,6 +10,8 @@
 
     rustup
     clang
+
+    mold
   ];
 
   programs = {

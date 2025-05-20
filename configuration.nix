@@ -9,7 +9,6 @@
 with builtins;
 let
   HOSTNAME = replaceStrings [ "\n" ] [ "" ] (readFile ./HOSTNAME);
-  home-manager = fetchGit "https://github.com/nix-community/home-manager";
 in
 {
   options = {
@@ -19,8 +18,8 @@ in
   imports = [
     ./hosts/${HOSTNAME}/hardware-configuration.nix
     ./hosts/${HOSTNAME}
-    "${home-manager}/nixos"
     "${fetchTarball "https://github.com/catppuccin/nix/archive/main.tar.gz"}/modules/nixos"
+    "${fetchGit "https://github.com/nix-community/home-manager"}/nixos"
   ];
 
   config =
@@ -49,6 +48,7 @@ in
         networking = {
           hostName = HOSTNAME;
           networkmanager.enable = true;
+          firewall.enable = false;
         };
 
         time.timeZone = "America/New_York";
@@ -62,7 +62,7 @@ in
           users = {
             bs = {
               isNormalUser = true;
-              extraGroups = [ "wheel" "plugdev" ];
+              extraGroups = [ "wheel" "plugdev" "wireshark" ];
               shell = pkgs.zsh;
               openssh.authorizedKeys.keys = [ bsUtils.sshKey ];
             };
@@ -211,6 +211,7 @@ in
 
         programs = {
           zsh.enable = true;
+          wireshark.enable = true;
         };
         nixpkgs.config.allowUnfreePredicate =
           pkg:

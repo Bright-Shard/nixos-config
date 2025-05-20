@@ -13,7 +13,7 @@ let
     owner = "0xc000022070";
     repo = "zen-browser-flake";
     rev = "main";
-    hash = "sha256-L1NQFK3X4e0Xidw7D7ECQv3G+j4fXkxW7ITGZkjIk8s=";
+    hash = "sha256-Ax1S/YaEovDKz9M71AweVpDxqJiTn/tHowbbUTb4gSo=";
   }) { };
 in
 {
@@ -74,6 +74,8 @@ in
         yt-dlp
 
         # Games
+        mangohud
+        gamemode
         osu-lazer-bin
         prismlauncher
 
@@ -90,6 +92,11 @@ in
       ));
 
     sessionVariables = import ./env.nix;
+
+    file.".cargo/config.toml".text = ''
+      [target.'cfg(target_os = "linux")']
+      rustflags = ["-C", "link-arg=-fuse-ld=mold"]
+    '';
   };
 
   programs = {

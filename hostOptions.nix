@@ -32,4 +32,9 @@ in
     type = types.attrs;
     default = { };
   };
+  home-manager = mkOption {
+    description = "Additional home-manager settings for the bs user on this host.";
+    type = types.deferredModule;
+    default = { ... }: {};
+  };
 }

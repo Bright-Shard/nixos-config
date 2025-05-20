@@ -19,7 +19,8 @@
       # Allows you to run "git mm" to merge the current branch with master
       (writeShellScriptBin "git-mm" ''
         branch=$(git branch --show-current)
-        main=$(git branch --points-at origin/HEAD | head -n 1)
+        main=$(git branch -r | grep origin/HEAD | cut -d "/" -f 3)
+        echo "Merging '$main' into '$branch'..."
         git checkout $main
         git pull
         git checkout $branch
