@@ -117,7 +117,7 @@ in
       enable = true;
       enableSshSupport = true;
       enableZshIntegration = true;
-      pinentryPackage = pkgs.pinentry-qt;
+      pinentry.package = pkgs.pinentry-qt;
       sshKeys = [ "AC30BE46A5E3A3662BA677BCA5999525DB625466" ];
     };
     ollama = {
@@ -130,7 +130,8 @@ in
   };
 
   i18n.inputMethod = {
-    enabled = "fcitx5";
+    enable = true;
+    type = "fcitx5";
     fcitx5 = {
       addons = with pkgs; [ fcitx5-mozc ];
       waylandFrontend = true;
