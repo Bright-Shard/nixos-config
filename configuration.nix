@@ -20,6 +20,7 @@ in
     ./hosts/${HOSTNAME}
     "${fetchTarball "https://github.com/catppuccin/nix/archive/main.tar.gz"}/modules/nixos"
     "${fetchGit "https://github.com/nix-community/home-manager"}/nixos"
+    ./modules/tuned.nix
   ];
 
   config =
@@ -43,7 +44,9 @@ in
         };
         # Bypass workqueues for all LUKS devices
         # This is a performance optimisation: https://search.nixos.org/options?channel=unstable&show=boot.initrd.luks.devices.%3Cname%3E.bypassWorkqueues&from=0
-        boot.initrd.luks.devices = mapAttrs (name: value: { bypassWorkqueues = true; }) (bsUtils.hosts.${HOSTNAME}.boot.initrd.luks.devices);
+        boot.initrd.luks.devices = mapAttrs (name: value: { bypassWorkqueues = true; }) (
+          bsUtils.hosts.${HOSTNAME}.boot.initrd.luks.devices
+        );
 
         networking = {
           hostName = HOSTNAME;
@@ -62,7 +65,11 @@ in
           users = {
             bs = {
               isNormalUser = true;
-              extraGroups = [ "wheel" "plugdev" "wireshark" ];
+              extraGroups = [
+                "wheel"
+                "plugdev"
+                "wireshark"
+              ];
               shell = pkgs.zsh;
               openssh.authorizedKeys.keys = [ bsUtils.sshKey ];
             };
@@ -78,6 +85,7 @@ in
         };
 
         services = {
+          tuned.enable = true;
           envfs.enable = true;
           udev.extraRules = ''
             # Adafruit: https://learn.adafruit.com/circuitpython-libraries-on-any-computer-with-mcp2221/linux
@@ -113,7 +121,10 @@ in
             openDefaultPorts = false;
             settings = {
               options = {
-                listenAddresses = [ "quic://:22001" "tcp://:22001" ];
+                listenAddresses = [
+                  "quic://:22001"
+                  "tcp://:22001"
+                ];
                 localAnnounceEnabled = false;
               };
               folders = {
@@ -162,6 +173,7 @@ in
             vim
             w3m
             busybox
+            nixfmt-rfc-style
           ];
           etc = {
             # Allows the 1Password browser extension to communicate with the
@@ -174,6 +186,11 @@ in
               text = ".zen-wrapped";
               mode = "0755";
             };
+          };
+          shellAliases = {
+            # Clears screen and scrollback, instead of just screen:
+            # https://github.com/kovidgoyal/kitty/issues/268#issuecomment-419342337
+            clear = "printf '\\033[2J\\033[3J\\033[1;1H'";
           };
         };
 

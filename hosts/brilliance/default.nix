@@ -23,10 +23,11 @@ in
       ];
     };
 
-    home-manager = { ... }:
-    {
-      services.syncthing.settings.folders."~/afia".path = "/external/1tb/afia";
-    };
+    home-manager =
+      { ... }:
+      {
+        services.syncthing.settings.folders."~/afia".path = "/external/1tb/afia";
+      };
   };
 
   fileSystems =
@@ -38,5 +39,6 @@ in
         };
       };
     in
-    drive "1tb" "fa4c4b84-b29c-4464-b45d-ab4140da1560" // drive "500gb" "294976ec-c6a8-414f-86e8-a446e05cfeb0";
+    drive "1tb" "fa4c4b84-b29c-4464-b45d-ab4140da1560"
+    // drive "500gb" "294976ec-c6a8-414f-86e8-a446e05cfeb0";
 }
