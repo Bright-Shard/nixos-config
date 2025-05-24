@@ -93,12 +93,11 @@ in
           };
 
           decoration = {
-
             rounding = 10;
-
             inactive_opacity = ".8";
-
           };
+
+          xwayland.force_zero_scaling = true;
 
           input = {
 
