@@ -16,26 +16,65 @@ in
     };
   };
 
-  services.tuned.profiles =
-    { }
-    # Underclocking profiles that:
-    # - Restrict system to only use n CPU cores
-    # - Disable CPU boost
-    # - Underclock the GPU
-    // listToAttrs (
-      map
-        (coresInt: let cores = toString coresInt; in{
-          name = "cores${cores}";
-          value = {
-            scheduler.isolated_cores = "${cores}-15";
-            cpu.boost = 0;
-            video.radeon_powersave = "low";
+  services.tuned = {
+    defaultProfiles = false;
+    profiles =
+      {
+        # Standard profile:
+        # - Enable CPU boost
+        # - Conservative CPU governor
+        # - Default GPU performance
+        std = {
+          main.summary = "Standard profile";
+          cpu = {
+            boost = 1;
+            governor = "conservative";
           };
-        })
-        [
-          4
-          8
-          12
-        ]
-    );
+          video.radeon_powersave = "default";
+        };
+        # Performance profile:
+        # - Enable CPU boost
+        # - Performance CPU governor
+        # - Maxes the GPU
+        perf = {
+          main.summary = "Performance profile";
+          cpu = {
+            boost = 1;
+            governor = "performance";
+          };
+          video.radeon_powersave = "high";
+        };
+      }
+      # Underclocking profiles that:
+      # - Restrict system to only use n CPU cores
+      # - Disable CPU boost
+      # - Powersave CPU governor
+      # - Underclock the GPU
+      // listToAttrs (
+        map
+          (
+            coresInt:
+            let
+              cores = toString coresInt;
+            in
+            {
+              name = "uc${cores}";
+              value = {
+                main.summary = "Underclocked profile that only runs ${cores} CPU cores";
+                scheduler.isolated_cores = "${cores}-15";
+                cpu = {
+                  boost = 0;
+                  governor = "powersave";
+                };
+                video.radeon_powersave = "low";
+              };
+            }
+          )
+          [
+            4
+            8
+            12
+          ]
+      );
+  };
 }

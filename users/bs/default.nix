@@ -74,6 +74,7 @@ in
         ffmpeg
         inotify-tools
         yt-dlp
+        bat
 
         # Games
         mangohud

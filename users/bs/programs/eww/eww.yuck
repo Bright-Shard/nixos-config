@@ -49,6 +49,10 @@
 	echo $count
 	`
 )
+(defpoll powerProfile
+	:interval ".1s"
+	`tuned-adm active | cut -d ' ' -f 4`
+)
 (deflisten hyprlandState
 	:initial `{
 		"workspaces": [ 1 ],
@@ -111,6 +115,7 @@
 		:space-evenly false
 		:valign "end"
 
+		(label :text "󱐋 ${powerProfile}")
 		(label :text "󰌌 ${capslock > 0 ? "A" : "a"}")
 
 		; The complicated logic is to put a 0 in front of

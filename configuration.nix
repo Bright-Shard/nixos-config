@@ -174,10 +174,7 @@ in
         };
         shellAliases = {
           cfgupdate = "sudo nixos-rebuild switch --file /etc/nixos";
-          sysupdate = ''
-            sudo nix-channel --update
-            cfgupdate
-          '';
+          sysupdate = "cfgupdate --update-all";
           # Clears screen and scrollback, instead of just screen:
           # https://github.com/kovidgoyal/kitty/issues/268#issuecomment-419342337
           clear = "printf '\\033[2J\\033[3J\\033[1;1H'";

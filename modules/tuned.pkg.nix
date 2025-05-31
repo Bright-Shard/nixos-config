@@ -35,6 +35,7 @@ python3Packages.buildPythonApplication rec {
     python-linux-procfs
     pygobject3
     pyudev
+    pyperf
   ];
 
   dontWrapGApps = true;
