@@ -17,7 +17,6 @@ in
   };
 
   services.tuned = {
-    defaultProfiles = false;
     profiles =
       {
         # Standard profile:

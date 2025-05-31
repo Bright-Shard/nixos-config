@@ -7,7 +7,7 @@
   systemd,
   gobject-introspection,
   wrapGAppsHook3,
-  virt-what,
+  virt-what
 }:
 
 python3Packages.buildPythonApplication rec {
@@ -21,6 +21,26 @@ python3Packages.buildPythonApplication rec {
     rev = "refs/tags/v${version}";
     hash = "sha256-MMyYMgdvoAIeLCqUZMoQYsYYbgkXku47nZWq2aowPFg=";
   };
+
+  postPatch = ''
+    # The makefile has 2 arguments (DESTDIR and PREFIX) that are used
+    # in different places to prefix different things... here we unify
+    # a few places
+    substituteInPlace Makefile \
+      --replace-fail "mkdir -p \$(DESTDIR)/" "mkdir -p \$(PREFIX)/"
+
+    # These tests try to access TTY, which isn't available in the Nix
+    # sandbox. So we prefix them with _ to disable them.
+    substituteInPlace tests/unit/hardware/test_device_matcher_udev.py \
+      --replace-fail "def test_regex_search" "def _test_regex_search" \
+      --replace-fail "def test_simple_search" "def _test_simple_search"
+    substituteInPlace tests/unit/hardware/test_inventory.py \
+      --replace-fail "def test_get_device" "def _test_get_device"
+
+    # TuneD tries to load its glade file from a fixed system path
+    substituteInPlace "tuned-gui.py" \
+      --replace-fail "/usr/share/tuned/ui/tuned-gui.glade" "${placeholder "out"}/share/tuned/ui/tuned-gui.glade"
+  '';
 
   nativeBuildInputs = [
     desktop-file-utils
@@ -42,14 +62,16 @@ python3Packages.buildPythonApplication rec {
 
   makeFlags = [
     "PYTHON=${python3}/bin/python3"
-    "PREFIX="
-    "DESTDIR=${placeholder "out"}"
-    "PYTHON_SITELIB=/${python3.sitePackages}"
+    "PYTHON_SITELIB=$(PREFIX)/${python3.sitePackages}"
+    "PREFIX=${placeholder "out"}"
+    "SYSCONFDIR=$(PREFIX)/etc"
+    "TMPFILESDIR=$(PREFIX)$(TMPFILESDIR_FALLBACK)"
+    "UNITDIR=$(PREFIX)$(UNITDIR_FALLBACK)"
   ];
   preFixup = ''
     makeWrapperArgs+=("''${gappsWrapperArgs[@]}")
   '';
 
-  doCheck = true;
-  checkTarget = "test";
+  pythonImportsCheck = "tuned";
+  installCheckTarget = "test";
 }

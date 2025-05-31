@@ -103,11 +103,6 @@ in
         type = attrsOf anything;
         default = { };
       };
-      defaultProfiles = mkOption {
-        description = "Whether or not to install the default TuneD profiles.";
-        type = bool;
-        default = true;
-      };
       globalSettings = {
         daemon = mkOption {
           type = bool;
@@ -194,7 +189,7 @@ in
         };
         profile_dirs = mkOption {
           type = stringList;
-          default = "/lib/tuned/profiles,/etc/tuned/profiles";
+          default = "${cfg.package}/lib/tuned/profiles,/etc/tuned/profiles";
         };
       };
     };
@@ -231,7 +226,6 @@ in
     };
     environment.etc =
       (genEtcFolder "" "${cfg.package}/etc/tuned")
-      // (if cfg.defaultProfiles then genEtcFolder "tuned/" "${cfg.package}/lib/tuned/profiles" else { })
       // (genEtcFolder "tuned/" "${cfg.package}/lib/tuned/recommend.d")
       // {
         "tuned/tuned-main.conf".source = iniGlobalFormat.generate "tuned-main.conf" {
