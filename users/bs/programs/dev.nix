@@ -1,18 +1,25 @@
 # Programming-related packages.
 
-{ pkgs, bsUtils, ... }:
+{ pkgs, consts, ... }:
 
 {
-  home.packages = with pkgs; [
-    nixd
-    nixfmt-rfc-style
-    python313Packages.python-lsp-server
+  home = {
+    packages = with pkgs; [
+      nixd
+      nixfmt-rfc-style
+      python313Packages.python-lsp-server
 
-    rustup
-    clang
+      rustup
+      clang
 
-    mold
-  ];
+      mold
+    ];
+
+    file.".cargo/config.toml".text = ''
+      [target.x86_64-unknown-linux-gnu]
+      rustflags = ["-C", "link-arg=-fuse-ld=mold"]
+    '';
+  };
 
   programs = {
     vscode = {
@@ -57,11 +64,11 @@
         restore_on_startup = "none";
         hard_tabs = true;
         tab_size = 3;
-        ui_font_family = bsUtils.codeFont;
-        ui_font_size = bsUtils.codeFontSize;
-        buffer_font_family = bsUtils.codeFont;
+        ui_font_family = consts.codeFont;
+        ui_font_size = consts.codeFontSize;
+        buffer_font_family = consts.codeFont;
         buffer_line_height = "standard";
-        buffer_font_size = bsUtils.codeFontSize;
+        buffer_font_size = consts.codeFontSize;
         soft_wrap = "bounded";
         load_direnv = "shell_hook";
         tab_bar.show = false;
@@ -83,7 +90,7 @@
       signing = {
         signByDefault = true;
         format = "openpgp";
-        key = bsUtils.pgpKeyGpgId;
+        key = consts.pgpKeyGpgId;
       };
       extraConfig = {
         init = {

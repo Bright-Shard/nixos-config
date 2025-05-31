@@ -1,4 +1,4 @@
-{ bsUtils, ... }:
+{ consts, ... }:
 
 with builtins;
 let
@@ -10,7 +10,7 @@ let
   };
   hasSyncthingId =
     hostName:
-    if (bsUtils.hosts.${hostName}.hostOptions.syncthingId != null) then
+    if (consts.hosts.${hostName}.hostOptions.syncthingId != null) then
       true
     else
       warn "Host '${hostName}' doesn't have a Syncthing ID" false;
@@ -28,9 +28,9 @@ in
             name = hostName;
             value = {
               addresses = [ "tcp://${hostName}.bs" ];
-              id = bsUtils.hosts.${hostName}.hostOptions.syncthingId;
+              id = consts.hosts.${hostName}.hostOptions.syncthingId;
             };
-          }) (filter hasSyncthingId (attrNames bsUtils.hosts))
+          }) (filter hasSyncthingId (attrNames consts.hosts))
         ));
       folders =
         let

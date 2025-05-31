@@ -22,13 +22,13 @@ in
         (map (val: "${toString val},monitor:${sideMonitor}") ([ 0 ] ++ genList (val: val + 6) 4))
       ];
     };
-
-    home-manager =
-      { ... }:
-      {
-        services.syncthing.settings.folders."~/afia".path = "/external/1tb/afia";
-      };
   };
+
+  home-manager.users.bs =
+    { ... }:
+    {
+      services.syncthing.settings.folders."~/afia".path = "/external/1tb/afia";
+    };
 
   fileSystems =
     let

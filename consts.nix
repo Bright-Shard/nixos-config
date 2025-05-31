@@ -1,7 +1,8 @@
-{ lib, HOSTNAME, ... }@inputs:
+hostName: hosts:
 
 {
-  hostname = HOSTNAME;
+  inherit hostName;
+  inherit hosts;
 
   # Font settings
   codeFont = "ShureTechMono Nerd Font Propo";
@@ -28,36 +29,4 @@
     ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEpccNDjO3RI6swBEZCT+ZyGDN10jkmm3re/1PcJqgkL
   '';
   sshKeyGpgId = "0xA79C716EC11610D2";
-
-  # Attribute set of { hostName = module; } - allows accessing the modules of
-  # all hosts, not just the current one
-  hosts =
-    with builtins;
-    with lib;
-    (
-      let
-        hosts = attrNames (readDir ./hosts);
-        hostNameToModule =
-          hostName:
-          (evalModules {
-            modules = [
-              {
-                options = {
-                  hostOptions = import ./hostOptions.nix lib;
-                };
-              }
-
-              ./hosts/${hostName}
-              ./hosts/${hostName}/hardware-configuration.nix
-            ] ++ import <nixpkgs/nixos/modules/module-list.nix>;
-            specialArgs = inputs;
-          }).config;
-      in
-      (listToAttrs (
-        map (hostName: {
-          name = hostName;
-          value = hostNameToModule hostName;
-        }) hosts
-      ))
-    );
 }

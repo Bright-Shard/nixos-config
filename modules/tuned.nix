@@ -196,6 +196,34 @@ in
   };
 
   config = mkIf cfg.enable {
+    systemd.services.tuned = {
+      description = "Dynamic System Tuning Daemon";
+      after = [
+        "systemd-sysctl.service"
+        "network.target"
+        "dbus.service"
+        "polkit.service"
+      ];
+      requires = [ "dbus.service" ];
+      conflicts = [
+        "cpupower.service"
+        "auto-cpufreq.service"
+        "tlp.service"
+        "power-profiles-daemon.service"
+      ];
+      documentation = [
+        "man:tuned(8)"
+        "man:tuned.conf(5)"
+        "man:tuned-adm(8)"
+      ];
+      serviceConfig = {
+        Type = "dbus";
+        PIDFile = "/run/tuned/tuned.pid";
+        BusName = "com.redhat.tuned";
+        ExecStart = "${cfg.package}/bin/tuned -l -P";
+      };
+      wantedBy = [ "multi-user.target" ];
+    };
     environment.etc =
       (genEtcFolder "" "${cfg.package}/etc/tuned")
       // (genEtcFolder "tuned/" "${cfg.package}/lib/tuned/profiles")

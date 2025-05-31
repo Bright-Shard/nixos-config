@@ -17,7 +17,6 @@ with builtins;
     })
     [
       "INPUT_METHOD"
-      "GTK_IM_MODULE"
       "QT_IM_MODULE"
     ]
 ))
