@@ -1,86 +1,30 @@
 {
-  lib,
   pkgs,
-  consts,
+  crux,
+  nixosConfig,
   ...
-}@inputs:
+}:
 
-let
-  isNixFile =
-    with builtins;
-    file: (stringLength file) > 4 && (substring (stringLength file - 4) 4 file) == ".nix";
-  zen =
-    import (fetchTarball "https://github.com/0xc000022070/zen-browser-flake/archive/main.tar.gz")
-      { };
-in
+with crux;
+
 {
-  imports =
-    with builtins;
-    [
-      ./theme.nix
-      "${fetchTarball "https://github.com/catppuccin/nix/archive/main.tar.gz"}/modules/home-manager"
-    ]
-    ++ (map (file: ./programs/${file}) (filter isNixFile (attrNames (readDir ./programs))));
+  imports = [ ./shell.nix ] ++ (if nixosConfig.bs.gui then [ ./gui.nix ] else [ ]);
 
-  manual.html.enable = true;
+  config = {
+    manual.html.enable = true;
 
-  nixpkgs.config = {
-    allowUnfreePredicate =
-      pkg:
-      builtins.elem (lib.getName pkg) [
-        "osu-lazer-bin"
-        "vscode"
-        "vscode-extension-ms-vsliveshare-vsliveshare"
-      ];
-
-    permittedInsecurePackages = [
-      # https://github.com/krille-chan/fluffychat/issues/1258
-      "fluffychat-linux-1.26.1"
-      "olm-3.2.16"
-    ];
-  };
-
-  home = {
-    username = "bs";
-    homeDirectory = "/home/bs";
-    stateVersion = "24.11";
-    packages =
-      with pkgs;
-      with inputs;
-      with builtins;
-      [
-        # Apps
-        zen.default
-        vesktop
-        mpv
-        signal-desktop
-        fluffychat
-        tor-browser
-        mullvad-vpn
-        mullvad-browser
-        monero-gui
-        railway-wallet
-
+    home = {
+      username = "bs";
+      homeDirectory = "/home/bs";
+      stateVersion = "24.11";
+      packages = with pkgs; [
         # Utilities
         fastfetch
-        nmap
-        socat
-        jq
-        obs-studio
-        obs-studio-plugins.input-overlay
-        tailscale
-        kdePackages.dolphin
-        kdePackages.gwenview
         ffmpeg
-        inotify-tools
         yt-dlp
-        bat
-
-        # Games
-        mangohud
-        gamemode
-        osu-lazer-bin
-        prismlauncher
+        android-tools
+        nmap
+        dig
 
         # Misc
         font-manager
@@ -88,53 +32,60 @@ in
         # System Monitors
         nvtopPackages.amd
         bottom
-      ]
-      # Custom packages
-      ++ (map (file: pkgs.callPackage ./pkgs/${file} { }) (
-        filter isNixFile (attrNames (readDir ./pkgs))
-      ));
 
-    sessionVariables = import ./env.nix;
-  };
-
-  programs = {
-    home-manager.enable = true;
-    gpg = {
-      enable = true;
-      publicKeys = [
-        {
-          text = consts.pgpKey;
-          trust = 5;
-        }
+        # Dev Tooling
+        rustup
+        clang
+        mold
+        socat
+        jq
+        inotify-tools
+        tokei
+        podman
       ];
-    };
-  };
 
-  services = {
-    gpg-agent = {
-      enable = true;
-      enableSshSupport = true;
-      enableZshIntegration = true;
-      pinentry.package = pkgs.pinentry-qt;
-      sshKeys = [ "AC30BE46A5E3A3662BA677BCA5999525DB625466" ];
+      sessionVariables = {
+        NIXOS_OZONE_WL = "1";
+        XCURSOR_SIZE = "12";
+        QT_QPA_PLATFORM = "wayland";
+        QT_WAYLAND_DISABLE_WINDOWDECORATION = "1";
+        PATH = "/home/bs/.cargo/bin:$PATH";
+      }
+      # Set fcitx5 as the IME
+      // (listToAttrs (
+        map
+          (var: {
+            name = var;
+            value = "fcitx5";
+          })
+          [
+            "INPUT_METHOD"
+            "QT_IM_MODULE"
+          ]
+      ));
     };
 
-    ollama = {
-      enable = true;
-      acceleration = "rocm";
-      environmentVariables = {
-        HSA_OVERRIDE_GFX_VERSION = "10.3.0";
+    programs = {
+      home-manager.enable = true;
+      gpg = {
+        enable = true;
+        publicKeys = [
+          {
+            text = KEYS.PGP-PUBLIC;
+            trust = 5;
+          }
+        ];
       };
     };
-  };
 
-  i18n.inputMethod = {
-    enable = true;
-    type = "fcitx5";
-
-    fcitx5 = {
-      addons = with pkgs; [ fcitx5-mozc ];
-      waylandFrontend = true;
+    services = {
+      gpg-agent = {
+        enable = true;
+        enableSshSupport = true;
+        enableZshIntegration = true;
+        pinentry.package = pkgs.pinentry-qt;
+        sshKeys = [ "AC30BE46A5E3A3662BA677BCA5999525DB625466" ];
+      };
     };
   };
 }

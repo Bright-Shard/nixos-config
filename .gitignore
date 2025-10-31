@@ -1,1 +1,3 @@
 result
+priv/*
+!priv/default.nix

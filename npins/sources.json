@@ -1,0 +1,76 @@
+{
+  "pins": {
+    "catppuccin": {
+      "type": "Git",
+      "repository": {
+        "type": "GitHub",
+        "owner": "catppuccin",
+        "repo": "nix"
+      },
+      "branch": "main",
+      "submodules": false,
+      "revision": "7b42c91911c143ae3ea32a79cc8582b5920f24e3",
+      "url": "https://github.com/catppuccin/nix/archive/7b42c91911c143ae3ea32a79cc8582b5920f24e3.tar.gz",
+      "hash": "1f7miyn1hkzl24znyk19xa2x1bhgx1f2zz8lid78yrk5y1088hyx"
+    },
+    "home-manager": {
+      "type": "Git",
+      "repository": {
+        "type": "GitHub",
+        "owner": "nix-community",
+        "repo": "home-manager"
+      },
+      "branch": "master",
+      "submodules": false,
+      "revision": "c6d4cb31d7cef3a6deb16a6734f100e3f3a55122",
+      "url": "https://github.com/nix-community/home-manager/archive/c6d4cb31d7cef3a6deb16a6734f100e3f3a55122.tar.gz",
+      "hash": "1p6rfpgwnl41c6fic3a8si9926dwjvp19q006wnp9wfx7837iyav"
+    },
+    "nix-minecraft": {
+      "type": "Git",
+      "repository": {
+        "type": "GitHub",
+        "owner": "Infinidoge",
+        "repo": "nix-minecraft"
+      },
+      "branch": "master",
+      "submodules": false,
+      "revision": "8b74b9b65a97d9e2541a9fd28d79d91413e9bda1",
+      "url": "https://github.com/Infinidoge/nix-minecraft/archive/8b74b9b65a97d9e2541a9fd28d79d91413e9bda1.tar.gz",
+      "hash": "1zbr8b1bjk3sjjbk0d3b1njr57gfnlxs9vfrri9784z6cc988wwx"
+    },
+    "nixpkgs": {
+      "type": "Channel",
+      "name": "nixpkgs-unstable",
+      "url": "https://releases.nixos.org/nixpkgs/nixpkgs-25.11pre885943.e99366c665bd/nixexprs.tar.xz",
+      "hash": "1cl8gphr2r9yz5qxn4r85bcgdba23igjc269dv4jajw9r50xgij6"
+    },
+    "nixware": {
+      "type": "Git",
+      "repository": {
+        "type": "GitHub",
+        "owner": "NixOS",
+        "repo": "nixos-hardware"
+      },
+      "branch": "master",
+      "submodules": false,
+      "revision": "43ffe9ac82567512abb83187cb673de1091bdfa8",
+      "url": "https://github.com/NixOS/nixos-hardware/archive/43ffe9ac82567512abb83187cb673de1091bdfa8.tar.gz",
+      "hash": "1amgw52j0z8mgfklgz3nfa1qcr4sj0vblapamqzsw148ii4xblsx"
+    },
+    "zen-browser": {
+      "type": "Git",
+      "repository": {
+        "type": "GitHub",
+        "owner": "0xc000022070",
+        "repo": "zen-browser-flake"
+      },
+      "branch": "main",
+      "submodules": false,
+      "revision": "8d9c7683366269d2991698059816cd8c2800d3ff",
+      "url": "https://github.com/0xc000022070/zen-browser-flake/archive/8d9c7683366269d2991698059816cd8c2800d3ff.tar.gz",
+      "hash": "0l4hx5jnph0hh066jd3qvfx3zh0zm9mzz7p9cyxph7q790dh0a1n"
+    }
+  },
+  "version": 5
+}

@@ -1,0 +1,84 @@
+// Hardware
+input {
+	keyboard {
+		repeat-delay 600
+		repeat-rate 25
+		track-layout "global"
+		numlock
+	}
+	touchpad {
+		tap
+		natural-scroll
+		accel-profile "flat"
+	}
+	mouse { accel-profile "flat"; }
+	focus-follows-mouse
+}
+output "ASUSTek COMPUTER INC VG27AQL3A S4LMQS000501" {
+	transform "normal"
+	mode "2560x1440@180.002000"
+	variable-refresh-rate on-demand=false
+}
+screenshot-path "~/media/Screenshot from %Y-%m-%d %H-%M-%S.png"
+
+// Looksies
+cursor {
+	xcursor-theme "default"
+	xcursor-size 20
+}
+layout {
+	gaps 16
+	struts {
+		left 0
+		right 0
+		top 0
+		bottom 0
+	}
+	focus-ring { off; }
+	border { off; }
+	default-column-width
+	center-focused-column "never"
+}
+window-rule {
+	// Curve corners
+	geometry-corner-radius 12 12 12 12
+	clip-to-geometry true
+}
+window-rule {
+	// Make inactive windows translucent
+	match is-active=false
+	opacity 0.7
+}
+// Don't want titlebars messing up my style
+prefer-no-csd
+
+// Keybinds
+binds {
+	${MOD}+W { focus-window-or-workspace-up; }
+	${MOD}+S { focus-window-or-workspace-down; }
+	${MOD}+A { focus-column-left; }
+	${MOD}+D { focus-column-right; }
+	${MOD}+Up { move-workspace-up; }
+	${MOD}+Down { move-workspace-down; }
+	${MOD}+Left { swap-window-left; }
+	${MOD}+Right { swap-window-right; }
+
+	${MOD}+B { quit skip-confirmation=true; }
+	${MOD}+H { show-hotkey-overlay; }
+	${MOD}+X { screenshot; }
+
+	${MOD}+E { toggle-overview; }
+	${MOD}+F { maximize-column; }
+	${MOD}+R { fullscreen-window; }
+	${MOD}+Q { close-window; }
+	${MOD}+Space { spawn "bemenu-run" "--accept-single"; }
+
+	${MOD}+T { spawn "alacritty"; }
+	${MOD}+Z { spawn "zeditor"; }
+}
+
+// Startup options
+// Additional startup scripts in `gui.nix` where format strings are available
+hotkey-overlay { skip-at-startup; }
+spawn-at-startup "fcitx5" "-d"
+spawn-at-startup "solaar-cli" "-w" "hide"

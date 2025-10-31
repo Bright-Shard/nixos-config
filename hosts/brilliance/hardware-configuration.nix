@@ -15,25 +15,22 @@
   boot.initrd.availableKernelModules = [
     "xhci_pci"
     "ahci"
-    "nvme"
-    "usb_storage"
     "usbhid"
+    "usb_storage"
     "sd_mod"
+    "sr_mod"
   ];
   boot.initrd.kernelModules = [ ];
   boot.kernelModules = [ "kvm-amd" ];
   boot.extraModulePackages = [ ];
 
   fileSystems."/" = {
-    device = "/dev/disk/by-uuid/d8232e50-92a9-4b87-8919-aa44cb423146";
-    fsType = "ext4";
+    device = "/dev/disk/by-uuid/e729fb82-c9ee-48c8-bcb2-21bcd373095f";
+    fsType = "btrfs";
   };
 
-  boot.initrd.luks.devices."brilliance".device =
-    "/dev/disk/by-uuid/65422811-2cc7-42da-9eaa-2f6fe5bf0a39";
-
   fileSystems."/boot" = {
-    device = "/dev/disk/by-uuid/9B25-7962";
+    device = "/dev/disk/by-uuid/15E9-584B";
     fsType = "vfat";
     options = [
       "fmask=0022"
@@ -49,7 +46,7 @@
   # with explicit per-interface declarations with `networking.interfaces.<interface>.useDHCP`.
   networking.useDHCP = lib.mkDefault true;
   # networking.interfaces.enp3s0.useDHCP = lib.mkDefault true;
-  # networking.interfaces.wlp7s0.useDHCP = lib.mkDefault true;
+  # networking.interfaces.wlp6s0.useDHCP = lib.mkDefault true;
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
   hardware.cpu.amd.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
