@@ -1,6 +1,6 @@
 # Bright's NixOS Config
 
-[![Lines of Code](https://img.shields.io/endpoint?url=https%3A%2F%2Ftokei.kojix2.net%2Fbadge%2Fgithub%2Fbright-shard2%2Fnixos-config%2Flines)](https://tokei.kojix2.net/github/bright-shard/nixos-config)
+[![Lines of Code](https://img.shields.io/endpoint?url=https%3A%2F%2Ftokei.kojix2.net%2Fbadge%2Fgithub%2Fbright-shard%2Fnixos-config%2Flines)](https://tokei.kojix2.net/github/bright-shard/nixos-config)
 
 A (work-in-progress) customizable NixOS config I use for my PCs and servers.
 
