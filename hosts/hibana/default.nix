@@ -1,4 +1,11 @@
-{ NPINS, ... }:
+{
+  NPINS,
+  pkgs,
+  crux,
+  ...
+}:
+
+with crux;
 
 {
   imports = [ "${NPINS.nixware}/framework/desktop/amd-ai-max-300-series" ];
@@ -15,12 +22,35 @@
       ];
     };
 
-    services.ollama = {
-      enable = true;
-      acceleration = "rocm";
-      openFirewall = true;
-      user = "ollama";
-      group = "ollama";
+    services = {
+      ollama = {
+        enable = true;
+        acceleration = "rocm";
+        openFirewall = true;
+        user = "ollama";
+        group = "ollama";
+      };
+      xmrig = {
+        enable = true;
+        settings = {
+          autosave = false;
+          cpu = {
+            enabled = true;
+            asm = "ryzen";
+            max-threads-hint = 90;
+          };
+          opencl = {
+            enabled = true;
+            loader = "${pkgs.rocmPackages.clr}/lib/libOpenCL.so";
+          };
+          pools = [
+            {
+              coin = "monero";
+              url = "brilliance.bs:3333";
+            }
+          ];
+        };
+      };
     };
 
     # This option defines the first version of NixOS you have installed on this particular machine,

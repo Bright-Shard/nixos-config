@@ -139,7 +139,10 @@ mkMerge [
 
   # Other random shit
   {
-    networking.hostName = BUILD-META.HOSTNAME;
+    networking = {
+      hostName = BUILD-META.HOSTNAME;
+      enableIPv6 = false;
+    };
 
     i18n.defaultLocale = "en_US.UTF-8";
     catppuccin = {

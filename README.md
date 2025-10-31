@@ -13,6 +13,7 @@ Main features:
 	- Hosts to read data from each others' Nix config (e.g. their Syncthing IDs, so they automatically add each other in Syncthing)
 	- Modifying any part of the config on any machine, then being confident it'll work on all machines
 - Has a custom firewall module, for more fine-grained control over which ports are available to LAN, the Tailnet, or entire internet
+- Custom packaging + service options for p2pool
 - Has a work-in-progress (broken) from-scratch container runtime
 - Written entirely in stable Nix - no Flakes!
 

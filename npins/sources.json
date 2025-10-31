@@ -22,9 +22,9 @@
       },
       "branch": "master",
       "submodules": false,
-      "revision": "c6d4cb31d7cef3a6deb16a6734f100e3f3a55122",
-      "url": "https://github.com/nix-community/home-manager/archive/c6d4cb31d7cef3a6deb16a6734f100e3f3a55122.tar.gz",
-      "hash": "1p6rfpgwnl41c6fic3a8si9926dwjvp19q006wnp9wfx7837iyav"
+      "revision": "4ac96eb21c101a3e5b77ba105febc5641a8959aa",
+      "url": "https://github.com/nix-community/home-manager/archive/4ac96eb21c101a3e5b77ba105febc5641a8959aa.tar.gz",
+      "hash": "05gvg4m841biv0gi1c52q34ra2r68vvz3b2hcy2kdcz0j655l94l"
     },
     "nix-minecraft": {
       "type": "Git",
@@ -67,9 +67,9 @@
       },
       "branch": "main",
       "submodules": false,
-      "revision": "8d9c7683366269d2991698059816cd8c2800d3ff",
-      "url": "https://github.com/0xc000022070/zen-browser-flake/archive/8d9c7683366269d2991698059816cd8c2800d3ff.tar.gz",
-      "hash": "0l4hx5jnph0hh066jd3qvfx3zh0zm9mzz7p9cyxph7q790dh0a1n"
+      "revision": "26142b84460636c55bd612ae67225056c7faf134",
+      "url": "https://github.com/0xc000022070/zen-browser-flake/archive/26142b84460636c55bd612ae67225056c7faf134.tar.gz",
+      "hash": "1p2s7lgpgpnc50c3ginpg7rqcljgkh364c5ss0r00r0hjkwv2bg4"
     }
   },
   "version": 5

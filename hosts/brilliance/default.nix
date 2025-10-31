@@ -14,12 +14,14 @@ with crux;
       logViolations = false;
       openGlobalPorts.tcp = [
         18080 # Monero node
+        37889 # p2pool node
       ];
       openInterfacePorts = {
         # Ports to expose to my tailnet
         tailscale0 = {
           tcp = [
-            18082 # Monero node RPC
+            18081 # Monero node RPC
+            3333 # p2pool Stratum
             5000 # Nix binary cache
             25565 # Minecraft server
           ];
@@ -79,12 +81,17 @@ with crux;
     monero = {
       enable = true;
       prune = true;
+      rpc = {
+        address = "0.0.0.0";
+        port = 18081;
+      };
       extraConfig = ''
-        no-zmq=1
         no-igd=1
         hide-my-port=1
-        rpc-restricted-bind-ip=0.0.0.0
-        rpc-restricted-bind-port=18082
+        confirm-external-bind=1
+        zmq-pub=tcp://127.0.0.1:18083
+        enforce-dns-checkpointing=1
+        enable-dns-blocklist=1
       '';
     };
     xmrig = {
@@ -94,7 +101,7 @@ with crux;
         cpu = {
           enabled = true;
           asm = "ryzen";
-          max-threads-hint = 50;
+          max-threads-hint = 80;
         };
         opencl = {
           enabled = true;
@@ -103,13 +110,24 @@ with crux;
         pools = [
           {
             coin = "monero";
-            url = "daemon+http://localhost:18081";
-            user = PRIV.CRYPTO.MONERO-PRIMARY-ADDRESS;
-            daemon = true;
+            url = "brilliance.bs:3333";
           }
         ];
       };
     };
+    p2pool = {
+      enable = true;
+      settings = {
+        wallet = "46rDP6RQ8VaMj1DhCjNcgdJwuscdW6eguNDvagng7qKoHxiBrAhU6M4fRBmNT7ioMrYaPD7bxZxkYgy6MzvGkrCT3sNtfKZ";
+        chain = "mini";
+        stratum.host = "0.0.0.0";
+        p2p.host = "0.0.0.0";
+      };
+    };
+  };
+  systemd.services = {
+    xmrig.wants = [ "p2pool.service" ];
+    monero.wants = [ "tailscaled.service" ];
   };
 
   # Let Headscale bind ports <1000

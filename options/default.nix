@@ -14,6 +14,7 @@ in
   imports = [
     ./custom-defaults.nix
     ./containers
+    ./p2pool.nix
   ];
 
   options = {
@@ -110,19 +111,5 @@ in
     };
   };
 
-  config = {
-    containers = (
-      mapAttrs (containerName: binds: {
-        extraFlags = map (
-          bindName:
-          let
-            bind = binds.${bindName};
-            baseCmd = if bind.readOnly then "--bind-ro" else "--bind";
-            recursive = if bind.recursive then "rbind" else "norbind";
-          in
-          "${baseCmd}=${bind.hostPath}:${bind.mountPoint}:${recursive},${bind.idMapping}"
-        ) (attrNames binds);
-      }) config.bs.container-bindmounts
-    );
-  };
+  config = { };
 }
