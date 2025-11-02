@@ -51,7 +51,7 @@
       };
 
       cpu = {
-        format = "  {}%";
+        format = "  {usage}%";
         interval = 1;
       };
       memory = {
