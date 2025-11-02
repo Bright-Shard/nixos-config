@@ -48,6 +48,9 @@ mkMerge [
           21027 # Syncthing discovery
           5353 # mDNS
           41641 # TailScale
+          67 # DHCP
+          68 # DHCP
+          5355 # LLMNR
         ];
       };
       openInterfacePorts.tailscale0 = {
@@ -126,6 +129,40 @@ mkMerge [
                     ${portsList "tcp" firewall.openLanPorts.tcp}
                     ${portsList "udp" firewall.openLanPorts.udp}
                   }
+
+                  # Firewall rules for TailScale exit nodes
+                  #
+                  # Traffic coming from the Tailnet destined for the wider
+                  # internet gets marked with CT label 1 and masqueraded.
+                  # Masquerading makes the server see the packet as coming
+                  # from the TailScale exit node (instead of retaining the
+                  # tailnet member's IP address), so the server sends response
+                  # packets back to the exit node as expected.
+                  # Then, whenever the exit node receives packets marked with
+                  # CT label 1, it marks the packet to be excluded from Mullvad.
+                  # Technically the second half is only necessary for hosts
+                  # connected to Mullvad VPN, but for now it's implemented
+                  # globally.
+                  #
+                  # Note that exit nodes also need to have IP forwarding enabled
+                  # for this to work; see Hibana's config for an example.
+                  chain tailnetExitNodeOut {
+                    type nat hook postrouting priority 99; policy accept;
+                    ip daddr 100.64.0.0/10 accept;
+
+                    iifname "tailscale0" oifname "wg0-mullvad" ip saddr 100.64.0.0/10 meta nftrace set 1 ct label set 1 masquerade;
+                  }
+                  chain tailnetExitNodeIn {
+                    type filter hook prerouting priority -100; policy accept;
+                    ip saddr 100.64.0.0/10 accept;
+
+                    ct label 1 meta nftrace set 1 meta mark set 0x6d6f6c65;
+                  }
+
+                  # chain debug {
+                  #   type filter hook prerouting priority -300; policy accept;
+                  #   meta nftrace set 1;
+                  # }
                 '';
             };
           }
@@ -155,6 +192,8 @@ mkMerge [
                   # Bypass Mullvad tunnel for Tailnet + tzupdate
                   ip daddr 100.64.0.0/10 meta mark set 0x6d6f6c65;
                   meta skgid 727 meta mark set 0x6d6f6c65;
+                  # Bypass Mullvad tunnel for DNS queries
+                  ip daddr 194.242.2.2 meta mark set 0x6d6f6c65;
                 }
                 chain bypassMullvadFirewallIn {
                   type filter hook input priority -100; policy accept;
@@ -342,7 +381,7 @@ mkMerge [
     # around this we make it run under a specific group that has
     # special firewall rules to make it route outside of Mullvad. See
     # the networking section for those rules.
-    services.tzupdate.enable = true;
+    services.tzupdate.enable = false;
     users.groups.tzupdate.gid = 727;
     systemd.services.tzupdate.serviceConfig.Group = "tzupdate";
   }

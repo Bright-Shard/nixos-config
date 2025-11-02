@@ -70,9 +70,9 @@ with crux;
         dns = {
           base_domain = "bs";
           nameservers.global = [
-            "1.1.1.1"
-            "8.8.8.8"
-            "8.8.4.4"
+            # Mullvad's encrypted DNS
+            # https://mullvad.net/en/help/dns-over-https-and-dns-over-tls
+            "194.242.2.2"
           ];
         };
       };
@@ -95,7 +95,7 @@ with crux;
       '';
     };
     xmrig = {
-      enable = true;
+      enable = false;
       settings = {
         autosave = false;
         cpu = {
@@ -126,7 +126,7 @@ with crux;
     };
   };
   systemd.services = {
-    xmrig.wants = [ "p2pool.service" ];
+    # xmrig.wants = [ "p2pool.service" ];
     monero.wants = [ "tailscaled.service" ];
   };
 

@@ -37,7 +37,7 @@ with crux;
           cpu = {
             enabled = true;
             asm = "ryzen";
-            max-threads-hint = 90;
+            max-threads-hint = 80;
           };
           opencl = {
             enabled = true;
@@ -51,6 +51,12 @@ with crux;
           ];
         };
       };
+    };
+
+    # Allow IP forwarding so this computer can be used as a TailScale exit node
+    boot.kernel.sysctl = {
+      "net.ipv4.ip_forward" = 1;
+      # "net.ipv6.conf.all.forwarding" = 1;
     };
 
     # This option defines the first version of NixOS you have installed on this particular machine,

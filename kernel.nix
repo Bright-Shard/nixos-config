@@ -4,7 +4,9 @@
 # driver, but I don't really wanna stop using hardened, so here we are
 { pkgs, fetchurl, ... }:
 
-pkgs.linuxPackages_latest
+# Edit: Above used to be true. Nowadays I tend to run bleeding edge new Linux
+# because I've run into odd bugs.
+pkgs.linuxPackages_testing
 
 # let
 #   VERSION = {
