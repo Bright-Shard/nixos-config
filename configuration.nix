@@ -17,7 +17,6 @@ let
 in
 with crux;
 
-# Base NixOS configuration used by all containers and hosts.
 mkMerge [
   # Nix & Nixpkgs
   {
@@ -30,13 +29,24 @@ mkMerge [
         "steam"
         "steam-unwrapped"
         "minecraft-server"
+        "vivaldi"
       ];
     nix = {
       settings = {
         experimental-features = [ "nix-command" ];
-        substituters = [
-          "http://brilliance.bs:5000"
-          "https://cache.nixos.org"
+        substituters =
+          if !config.bs.apple-silicon then
+            [
+              "http://brilliance.bs:5000"
+              "https://cache.nixos.org"
+            ]
+          else
+            [ "https://cache.nixos.org" ];
+        extra-substituters = [
+          "https://nixos-apple-silicon.cachix.org"
+        ];
+        extra-trusted-public-keys = [
+          "nixos-apple-silicon.cachix.org-1:8psDu5SA5dAD7qA0zMy5UT292TxeEPzIz8VVEr2Js20="
         ];
       };
       nixPath = [ "nixpkgs=${NPINS.nixpkgs}" ];

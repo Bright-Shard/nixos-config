@@ -21,8 +21,8 @@ in
     src = pkgs.fetchFromGitHub {
       owner = "SChernykh";
       repo = "p2pool";
-      rev = "v4.11";
-      hash = "sha256-qoz7wMI6hheF+Pecfq3pPZRc2H3nkrxKRMWR2qmJdsI=";
+      rev = "v4.12";
+      hash = "sha256-Yrc36tibHanXZcE3I+xcmkCzBALE09zi1Zg0Lz3qS2g=";
       fetchSubmodules = true;
     };
 

@@ -40,6 +40,7 @@ in
     obs-studio
     obs-studio-plugins.input-overlay
     ((import NPINS.zen-browser { inherit pkgs; }).default)
+    vivaldi
 
     # Utilities
     brightnessctl
@@ -52,30 +53,37 @@ in
     gamemode
     osu-lazer-bin
     prismlauncher
+    r2modman
   ];
 
   # Niri config
-  xdg.configFile."niri/config.kdl".text =
-    let
-      baseCfg = replaceStrings [ "\${MOD}" "\${ALTMOD}" ] [ bs.mod bs.altMod ] (readFile ./apps/niri.kdl);
-    in
-    baseCfg
-    + (concatStringsSep "\n" (
-      map (cmd: "spawn-at-startup ${concatStringsSep " " (map (arg: "\"${arg}\"") cmd)}") [
-        [
-          "${pkgs.fcitx5}/bin/fcitx5"
-          "-d"
+  xdg = {
+    portal = {
+      enable = true;
+      extraPortals = with pkgs; [ xdg-desktop-portal-gnome ];
+    };
+    configFile."niri/config.kdl".text =
+      let
+        baseCfg = replaceStrings [ "\${MOD}" "\${ALTMOD}" ] [ bs.mod bs.altMod ] (readFile ./apps/niri.kdl);
+      in
+      baseCfg
+      + (concatStringsSep "\n" (
+        map (cmd: "spawn-at-startup ${concatStringsSep " " (map (arg: "\"${arg}\"") cmd)}") [
+          [
+            "${pkgs.fcitx5}/bin/fcitx5"
+            "-d"
+          ]
+          [
+            "${pkgs.swaybg}/bin/swaybg"
+            "-i"
+            "/home/bs/documents/wallpapers/wallpaper"
+            "-m"
+            "fill"
+          ]
         ]
-        [
-          "${pkgs.swaybg}/bin/swaybg"
-          "-i"
-          "/home/bs/documents/wallpapers/wallpaper"
-          "-m"
-          "fill"
-        ]
-      ]
-    ))
-    + "\nxwayland-satellite { path \"${pkgs.xwayland-satellite}/bin/xwayland-satellite\"; }";
+      ))
+      + "\nxwayland-satellite { path \"${pkgs.xwayland-satellite}/bin/xwayland-satellite\"; }";
+  };
 
   # Apps managed by home-manager
   programs = {

@@ -5,6 +5,7 @@
   lib,
   config,
   BUILD-META,
+  NPINS,
   ...
 }:
 
@@ -24,8 +25,6 @@ mkMerge [
         };
         efi.canTouchEfiVariables = true;
       };
-      # kernelPackages = pkgs.linuxPackages_hardened;
-      kernelPackages = pkgs.callPackage ../kernel.nix { };
     };
     # Needed with Linux-hardened for normal users to be able to create user
     # namespaces
@@ -34,6 +33,9 @@ mkMerge [
     # properly account for namespaces
     security.unprivilegedUsernsClone = true;
   }
+  (mkIf (!config.bs.apple-silicon) {
+    boot.kernelPackages = pkgs.callPackage ../nixpkgs/kernel.nix { };
+  })
 
   # Networking
   {
@@ -148,15 +150,18 @@ mkMerge [
                   # for this to work; see Hibana's config for an example.
                   chain tailnetExitNodeOut {
                     type nat hook postrouting priority 99; policy accept;
+                    # Ignore Tailnet traffic
                     ip daddr 100.64.0.0/10 accept;
+                    # Ignore TailScale's internal IP
+                    # https://tailscale.com/kb/1381/what-is-quad100
+                    ip saddr 100.100.100.100 accept;
 
                     iifname "tailscale0" oifname "wg0-mullvad" ip saddr 100.64.0.0/10 meta nftrace set 1 ct label set 1 masquerade;
                   }
                   chain tailnetExitNodeIn {
                     type filter hook prerouting priority -100; policy accept;
-                    ip saddr 100.64.0.0/10 accept;
 
-                    ct label 1 meta nftrace set 1 meta mark set 0x6d6f6c65;
+                    ct label 1 meta mark set 0x6d6f6c65;
                   }
 
                   # chain debug {
@@ -356,6 +361,7 @@ mkMerge [
         alsa.support32Bit = true;
       };
     };
+    hardware.asahi.enable = config.bs.apple-silicon;
     # Recommended to let Pipewire use realtime scheduling
     # https://wiki.nixos.org/wiki/PipeWire
     security.rtkit.enable = true;

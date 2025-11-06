@@ -133,28 +133,59 @@ with crux;
   # Let Headscale bind ports <1000
   systemd.services.headscale.serviceConfig.AmbientCapabilities = [ "CAP_NET_BIND_SERVICE" ];
 
-  # Minecwaft
-  systemd.services.lads-mc-server = {
-    enable = true;
-    after = [ "network.target" ];
-    wantedBy = [ "default.target" ];
-    serviceConfig = {
-      Type = "simple";
-      WorkingDirectory = "/srv/mc-servers/lads";
-      ExecStart = "${pkgs.bash}/bin/bash --login run.sh";
-      User = "mc-server";
-      Group = "mc-server";
+  systemd.services = {
+    # Minecwaft
+    lads-mc-server = {
+      enable = true;
+      after = [ "network.target" ];
+      wantedBy = [ "default.target" ];
+      serviceConfig = {
+        Type = "simple";
+        WorkingDirectory = "/srv/mc-servers/lads";
+        ExecStart = "${pkgs.bash}/bin/bash --login run.sh";
+        User = "mc-server";
+        Group = "mc-server";
+      };
     };
+    "49sd-bot" =
+      let
+        python = with pkgs; python313.withPackages (pypkgs: with pypkgs; [ discordpy ]);
+      in
+      {
+        enable = true;
+        after = [ "network.target" ];
+        wantedBy = [ "default.target" ];
+        serviceConfig = {
+          Type = "simple";
+          WorkingDirectory = "/srv/discord-bots/49sd";
+          ExecStart = "${python}/bin/python3 main.py";
+          User = "discord";
+          Group = "discord";
+        };
+      };
   };
+
+  # Users for self-hosting shit so I can limit permissions
   users = {
-    users.mc-server = {
-      isSystemUser = true;
-      group = "mc-server";
-      home = "/srv/mc-servers";
-      createHome = true;
-      packages = with pkgs; [ jdk ];
+    users = {
+      mc-server = {
+        isSystemUser = true;
+        group = "mc-server";
+        home = "/srv/mc-servers";
+        createHome = true;
+        packages = with pkgs; [ jdk ];
+      };
+      discord = {
+        isSystemUser = true;
+        group = "discord";
+        home = "/srv/discord-bots";
+        createHome = true;
+      };
     };
-    groups.mc-server = { };
+    groups = {
+      mc-server = { };
+      discord = { };
+    };
   };
 
   # This option defines the first version of NixOS you have installed on this particular machine,

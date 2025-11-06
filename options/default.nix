@@ -108,6 +108,11 @@ in
         );
         default = { };
       };
+      apple-silicon = mkOption {
+        description = "If this host runs on Apple Silicon hardware.";
+        type = types.bool;
+        default = false;
+      };
     };
   };
 

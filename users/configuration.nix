@@ -84,6 +84,8 @@ in
               "${mod}-g shift-n" = "editor::GoToPreviousDocumentHighlight";
               "${mod}-g b" = "pane::GoBack";
               "${mod}-g f" = "pane::GoForward";
+              "${mod}-g e" = "editor::GoToDiagnostic";
+              "${mod}-g shift-e" = "editor::GoToPreviousDiagnostic";
 
               # Excerpt management
               "${mod}-e o" = "editor::OpenExcerpts";
@@ -132,9 +134,19 @@ in
         lsp = {
           rust-analyzer.initialization_options.check.command = "clippy";
         };
+        language_models.ollama.api_url = "http://hibana.bs:11434";
       };
     };
 
+    gpg = {
+      enable = true;
+      publicKeys = [
+        {
+          text = KEYS.PGP-PUBLIC;
+          trust = 5;
+        }
+      ];
+    };
     git = {
       enable = true;
       ignores = [
@@ -148,15 +160,15 @@ in
           name = "BrightShard";
           email = "brightshard@brightshard.dev";
         };
-        signing = {
-          signByDefault = true;
-          format = "openpgp";
-          key = KEYS.PGP-GPG-ID;
-        };
         init = {
           defaultBranch = "main";
         };
         safe.directory = [ "/etc/nixos" ];
+      };
+      signing = {
+        signByDefault = true;
+        format = "openpgp";
+        key = KEYS.PGP-GPG-ID;
       };
     };
   };

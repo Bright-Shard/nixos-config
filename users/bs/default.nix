@@ -67,15 +67,6 @@ with crux;
 
     programs = {
       home-manager.enable = true;
-      gpg = {
-        enable = true;
-        publicKeys = [
-          {
-            text = KEYS.PGP-PUBLIC;
-            trust = 5;
-          }
-        ];
-      };
     };
 
     services = {

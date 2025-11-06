@@ -26,9 +26,9 @@ with crux;
       ollama = {
         enable = true;
         acceleration = "rocm";
-        openFirewall = true;
         user = "ollama";
         group = "ollama";
+        host = "0.0.0.0";
       };
       xmrig = {
         enable = true;
