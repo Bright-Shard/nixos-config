@@ -2,6 +2,7 @@
   pkgs,
   crux,
   nixosConfig,
+  NPINS,
   ...
 }:
 
@@ -16,7 +17,6 @@ with crux;
     home = {
       username = "bs";
       homeDirectory = "/home/bs";
-      stateVersion = "24.11";
       packages = with pkgs; [
         # Utilities
         fastfetch
@@ -41,7 +41,6 @@ with crux;
         jq
         inotify-tools
         tokei
-        podman
       ];
 
       sessionVariables = {
@@ -76,6 +75,12 @@ with crux;
         enableZshIntegration = true;
         pinentry.package = pkgs.pinentry-qt;
         sshKeys = [ "AC30BE46A5E3A3662BA677BCA5999525DB625466" ];
+      };
+      podman = {
+        enable = true;
+        settings.registries.search = [
+          "docker.io"
+        ];
       };
     };
   };

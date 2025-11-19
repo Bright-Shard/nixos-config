@@ -5,4 +5,5 @@ with builtins;
   HOPPY = import ./hoppy.nix;
   # Settings for monero etc.
   CRYPTO = import ./crypto.nix;
+  KAGI-TOKEN = readFile ./kagi-token.txt;
 }

@@ -48,7 +48,7 @@ mkMerge [
         udp = [
           22000 # Syncthing QUIC
           21027 # Syncthing discovery
-          5353 # mDNS
+          #5353 # mDNS
           41641 # TailScale
           67 # DHCP
           68 # DHCP
@@ -111,7 +111,7 @@ mkMerge [
                   }
 
                   chain whitelist {
-                    icmp type echo-request accept;
+                    ip protocol icmp accept;
                     ${portsList "tcp" firewall.openGlobalPorts.tcp}
                     ${portsList "udp" firewall.openGlobalPorts.udp}
 
@@ -150,7 +150,7 @@ mkMerge [
                   # for this to work; see Hibana's config for an example.
                   chain tailnetExitNodeOut {
                     type nat hook postrouting priority 99; policy accept;
-                    # Ignore Tailnet traffic
+                    # Ignore Tailnet->Tailnet traffic
                     ip daddr 100.64.0.0/10 accept;
                     # Ignore TailScale's internal IP
                     # https://tailscale.com/kb/1381/what-is-quad100
@@ -232,7 +232,7 @@ mkMerge [
     services = mkMerge [
       {
         avahi = {
-          enable = true;
+          enable = false;
           nssmdns4 = true;
           nssmdns6 = true;
         };
@@ -344,19 +344,6 @@ mkMerge [
       pipewire = {
         enable = true;
         pulse.enable = true;
-        extraConfig.pipewire."10-fix-crackling" = {
-          "context.properties" =
-            let
-              quantum = 1024;
-            in
-            {
-              # "default.clock.rate" = 44100;
-              "default.clock.rate" = 48000;
-              "default.clock.quantum" = quantum;
-              "default.clock.min-quantum" = quantum;
-              "default.clock.max-quantum" = quantum;
-            };
-        };
         alsa.enable = true;
         alsa.support32Bit = true;
       };
@@ -365,6 +352,10 @@ mkMerge [
     # Recommended to let Pipewire use realtime scheduling
     # https://wiki.nixos.org/wiki/PipeWire
     security.rtkit.enable = true;
+    zramSwap = {
+      enable = true;
+      memoryPercent = 30;
+    };
   }
   (mkIf config.bs.gui {
     hardware = {
@@ -479,14 +470,24 @@ mkMerge [
         # pwn = "sudo nixos-container root-login pwnshell";
         # System update aliases
         cfgupdate = "nixos-rebuild switch --file /etc/nixos --sudo";
-        sysupdate = "${pkgs.npins}/bin/npins -d /etc/nixos/npins upgrade; ${pkgs.npins}/bin/npins -d /etc/nixos/npins update; cfgupdate";
+        sysupdate = "cp -r /etc/nixos/npins /etc/nixos/npins.bak; ${pkgs.npins}/bin/npins -d /etc/nixos/npins upgrade; ${pkgs.npins}/bin/npins -d /etc/nixos/npins update; cfgupdate";
       };
     };
   }
 
   # yuh we gaymin
   (mkIf config.bs.gui {
-    environment.systemPackages = with pkgs; [ gamescope ];
+    environment = {
+      systemPackages = with pkgs; [ gamescope ];
+      etc = {
+        "1password/custom_allowed_browsers" = {
+          text = ''
+            .zen-wrapped
+          '';
+          mode = "0755";
+        };
+      };
+    };
     programs = {
       appimage = {
         enable = true;

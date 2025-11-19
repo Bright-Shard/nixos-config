@@ -14,11 +14,14 @@ let
 in
 
 {
-  home.packages = with pkgs; [
-    python313Packages.python-lsp-server
-    nixd
-    nixfmt-rfc-style
-  ];
+  home = {
+    packages = with pkgs; [
+      python313Packages.python-lsp-server
+      nixd
+      nixfmt-rfc-style
+    ];
+    stateVersion = bs.state-version;
+  };
 
   catppuccin = {
     enable = true;

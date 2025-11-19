@@ -2,6 +2,7 @@ final: prev:
 
 let
   pkgs = final;
+  inherit (pkgs) lib;
 in
 {
   # nixpkgs can be out-of-date...
@@ -47,4 +48,7 @@ in
       cp -r ./p2pool $out/bin/
     '';
   };
+
+  # Compat for flakes
+  legacyPackages = lib.genAttrs lib.systems.flakeExposed (system: pkgs);
 }

@@ -1,4 +1,9 @@
-{ crux, pkgs, ... }:
+{
+  crux,
+  pkgs,
+  config,
+  ...
+}:
 
 with crux;
 
@@ -33,8 +38,8 @@ with crux;
         hoppy = {
           tcp = [
             25565 # Minecraft server
-            443 # Headscale
-            80 # Headscale ACME challenge
+            443 # Caddy
+            80 # Caddy ACME challenge
           ];
           udp = [
             24454 # Proximity chat for Minecraft server
@@ -42,6 +47,7 @@ with crux;
         };
       };
     };
+    state-version = "25.11";
   };
 
   fileSystems = {
@@ -55,29 +61,92 @@ with crux;
   # Connect to my hoppy.network server for port forwarding
   networking.wireguard.interfaces.hoppy = PRIV.HOPPY;
 
-  # Self-hosted shit
-  services = {
-    nix-serve.enable = true;
+  services.nix-serve.enable = true;
 
-    headscale = {
-      enable = true;
-      port = 443;
+  services.caddy = {
+    enable = true;
+    extraConfig = ''
+      # just in case i want it later...
+      #@tailnet ${RESERVED-IPS.IPv4.CARRIER-GRADE-NAT}
+
+      # Headscale
+      router.brightshard.dev {
+      	reverse_proxy http://localhost:${toString config.services.headscale.port}
+      }
+      # Files I host publicly
+      http://static.brightshard.dev:2001 {
+      	root /srv/static
+      	file_server browse
+      }
+      static.brightshard.dev {
+        reverse_proxy http://localhost:2000 {
+          header_up X-Real-Ip {remote_host}
+          header_up X-Http-Version {http.request.proto}
+        }
+      }
+    '';
+    dataDir = "/srv/caddy";
+    email = "brightshard@brightshard.dev";
+  };
+  # Let Caddy bind ports <1024
+  systemd.services.caddy.serviceConfig.AmbientCapabilities = [ "CAP_NET_BIND_SERVICE" ];
+  # Ensure the static file storage folder is available
+  systemd.tmpfiles.settings."11-srv-static"."/srv/static".d = {
+    user = "caddy";
+    group = "caddy";
+  };
+
+  # Anubis, anti-bot anti-scraper software
+  # I host large files sometimes so I'd rather those not get downloaded a
+  # million times and eat my processing power
+  # Port mapping:
+  # - Anubis listens on 2000
+  # - It forwards to 2001
+  # - Caddy picks things back up at 2001
+  services.anubis = {
+    defaultOptions = {
       settings = {
-        server_url = "https://router.brightshard.dev";
-        listen_addr = "0.0.0.0:443";
-        tls_letsencrypt_hostname = "router.brightshard.dev";
-        acme_email = "brightshard@brightshard.dev";
-        dns = {
-          base_domain = "bs";
-          nameservers.global = [
-            # Mullvad's encrypted DNS
-            # https://mullvad.net/en/help/dns-over-https-and-dns-over-tls
-            "194.242.2.2"
-          ];
-        };
+        SERVE_ROBOTS_TXT = true;
+        WEBMASTER_EMAIL = "webmaster@brightshard.dev";
+        OG_PASSTHROUGH = true;
+        BIND_NETWORK = "tcp";
+      };
+      botPolicy = {
+        bots = [
+          { import = "(data)/common/keep-internet-working.yaml"; }
+          { import = "(data)/meta/ai-block-aggressive.yaml"; }
+          {
+            name = "challenge";
+            path_regex = ".*";
+            action = "CHALLENGE";
+          }
+        ];
       };
     };
+    instances.main.settings = {
+      TARGET = "http://localhost:2001";
+      BIND = ":2000";
+    };
+  };
 
+  services.headscale = {
+    enable = true;
+    port = 4000;
+    settings = {
+      server_url = "http://router.brightshard.dev";
+      dns = {
+        base_domain = "bs";
+        nameservers.global = [
+          # Mullvad's encrypted DNS
+          # https://mullvad.net/en/help/dns-over-https-and-dns-over-tls
+          "194.242.2.2"
+        ];
+      };
+    };
+  };
+
+  # Crypto
+  services = {
     monero = {
       enable = true;
       prune = true;
@@ -130,9 +199,7 @@ with crux;
     monero.wants = [ "tailscaled.service" ];
   };
 
-  # Let Headscale bind ports <1000
-  systemd.services.headscale.serviceConfig.AmbientCapabilities = [ "CAP_NET_BIND_SERVICE" ];
-
+  # Services not included in NixOS
   systemd.services = {
     # Minecwaft
     lads-mc-server = {
@@ -181,29 +248,14 @@ with crux;
         home = "/srv/discord-bots";
         createHome = true;
       };
+      caddy = {
+        home = "/srv/caddy";
+        createHome = true;
+      };
     };
     groups = {
       mc-server = { };
       discord = { };
     };
   };
-
-  # This option defines the first version of NixOS you have installed on this particular machine,
-  # and is used to maintain compatibility with application data (e.g. databases) created on older NixOS versions.
-  #
-  # Most users should NEVER change this value after the initial install, for any reason,
-  # even if you've upgraded your system to a new NixOS release.
-  #
-  # This value does NOT affect the Nixpkgs version your packages and OS are pulled from,
-  # so changing it will NOT upgrade your system - see https://nixos.org/manual/nixos/stable/#sec-upgrading for how
-  # to actually do that.
-  #
-  # This value being lower than the current NixOS release does NOT mean your system is
-  # out of date, out of support, or vulnerable.
-  #
-  # Do NOT change this value unless you have manually inspected all the changes it would make to your configuration,
-  # and migrated your data accordingly.
-  #
-  # For more information, see `man configuration.nix` or https://nixos.org/manual/nixos/stable/options#opt-system.stateVersion .
-  system.stateVersion = "24.11"; # Did you read the comment?
 }

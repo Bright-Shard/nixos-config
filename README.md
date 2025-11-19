@@ -46,6 +46,7 @@ Yes, this configuration is *that* big.
 - `crux.nix` has constants and utility functions that get glob imported in all the configuration files (e.g. every file starts off with a `with crux;` statement).
 - `nixpkgs/` has a custom nixpkgs overlay. There isn't much in there for now; it's mostly just there so I have a place for overlays in the future.
 - `npins/` is just the folder for [npins](https://github.com/andir/npins), a program that lets me pin dependencies without using Flakes. I prefer npins since it lets me depend on non-Flakes (while Flakes can only depend on other Flakes), and I also encountered some odd bugs with Flakes that I don't have in stable Nix.
+- `npins.bak/` is a backup of `npins/` from before the last time I updated my systems. This is useful if e.g. a nixpkgs update breaks packages I use and I need to roll back to an the nixpkgs version I was using before.
 - `priv/` is a gitignore'd folder. From GitHub, you can only see `priv/default.nix`, which imports private data from other files in the `priv` folder.
 - `users/` has home-manager configurations for users on my system. `users/configuration.nix` has globale home-manager configurations that apply to all users.
 - `programs/` is not currently used; the plan is to house larger program settings in their own modules there.

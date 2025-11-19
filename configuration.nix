@@ -13,7 +13,7 @@
 }@args:
 
 let
-  inherit (lib) mkMerge;
+  inherit (lib) mkMerge mkIf;
 in
 with crux;
 
@@ -29,20 +29,24 @@ mkMerge [
         "steam"
         "steam-unwrapped"
         "minecraft-server"
-        "vivaldi"
       ];
     nix = {
       settings = {
         experimental-features = [ "nix-command" ];
-        substituters =
-          if !config.bs.apple-silicon then
+        trusted-substituters =
+          if !config.bs.apple-silicon && BUILD-META.NATIVE-HOST != "brilliance" then
             [
+              # Note: This ordering is intentional, we want brilliance to be
+              # queried before the main NixOS cache
+              # Help NixOS out a lil bit, save them server load
+              # Also helps with some packages that my machines compile but
+              # NixOS' cache doesn't
               "http://brilliance.bs:5000"
               "https://cache.nixos.org"
             ]
           else
             [ "https://cache.nixos.org" ];
-        extra-substituters = [
+        extra-substituters = mkIf config.bs.apple-silicon [
           "https://nixos-apple-silicon.cachix.org"
         ];
         extra-trusted-public-keys = [
@@ -51,6 +55,7 @@ mkMerge [
       };
       nixPath = [ "nixpkgs=${NPINS.nixpkgs}" ];
     };
+    system.stateVersion = config.bs.state-version;
   }
 
   # Shell settings
@@ -83,22 +88,34 @@ mkMerge [
       };
     };
 
-    home-manager = {
-      useGlobalPkgs = true;
-      sharedModules = [
-        "${NPINS.catppuccin}/modules/home-manager"
-        ./users/configuration.nix
-      ];
-      users = listToAttrs (
-        map (username: {
-          name = username;
-          value = ./users/${username};
-        }) (readSubdirs ./users)
-      );
-      extraSpecialArgs = specialArgs // {
-        nixosConfig = config;
+    home-manager =
+      let
+        # Zen browser flake hackily imported in stable Nix
+        zen-browser = (import "${NPINS.zen-browser}/flake.nix").outputs {
+          self = zen-browser;
+          nixpkgs = pkgs;
+          home-manager = {
+            outPath = NPINS.home-manager;
+          };
+        };
+      in
+      {
+        useGlobalPkgs = true;
+        sharedModules = [
+          "${NPINS.catppuccin}/modules/home-manager"
+          zen-browser.homeModules.default
+          ./users/configuration.nix
+        ];
+        users = listToAttrs (
+          map (username: {
+            name = username;
+            value = ./users/${username};
+          }) (readSubdirs ./users)
+        );
+        extraSpecialArgs = specialArgs // {
+          nixosConfig = config;
+        };
       };
-    };
   }
 
   # Packages

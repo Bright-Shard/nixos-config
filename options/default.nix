@@ -113,6 +113,10 @@ in
         type = types.bool;
         default = false;
       };
+      state-version = mkOption {
+        description = "The state version for Home Manager and NixOS on this host.";
+        type = types.str;
+      };
     };
   };
 

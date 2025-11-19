@@ -10,6 +10,7 @@ input {
 		tap
 		natural-scroll
 		accel-profile "flat"
+		click-method "clickfinger"
 	}
 	mouse { accel-profile "flat"; }
 	focus-follows-mouse
