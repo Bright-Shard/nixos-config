@@ -33,19 +33,18 @@ mkMerge [
     nix = {
       settings = {
         experimental-features = [ "nix-command" ];
-        trusted-substituters =
+        # Self hosted binary cache
+        substituters =
           if !config.bs.apple-silicon && BUILD-META.NATIVE-HOST != "brilliance" then
-            [
-              # Note: This ordering is intentional, we want brilliance to be
-              # queried before the main NixOS cache
-              # Help NixOS out a lil bit, save them server load
-              # Also helps with some packages that my machines compile but
-              # NixOS' cache doesn't
-              "http://brilliance.bs:5000"
-              "https://cache.nixos.org"
-            ]
+            [ "http://brilliance.bs:5000" ]
           else
-            [ "https://cache.nixos.org" ];
+            [ ];
+        trusted-public-keys =
+          if BUILD-META.NATIVE-HOST != "brilliance" then
+            [ "brilliance:MOcBbGMoWZgVPATkKbqr0aKl/62yRX21syYAxtg7yWg=" ]
+          else
+            [ ];
+
         extra-substituters = mkIf config.bs.apple-silicon [
           "https://nixos-apple-silicon.cachix.org"
         ];

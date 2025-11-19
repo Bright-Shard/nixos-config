@@ -61,7 +61,10 @@ with crux;
   # Connect to my hoppy.network server for port forwarding
   networking.wireguard.interfaces.hoppy = PRIV.HOPPY;
 
-  services.nix-serve.enable = true;
+  services.nix-serve = {
+    enable = true;
+    secretKeyFile = "/srv/nix/private-key.pem";
+  };
 
   services.caddy = {
     enable = true;
@@ -73,7 +76,15 @@ with crux;
       router.brightshard.dev {
       	reverse_proxy http://localhost:${toString config.services.headscale.port}
       }
-      # Files I host publicly
+
+      # Static file server
+      # The file server listens on port 2001. Firewall settings guarantee this
+      # port isn't exposed on any interfaces.
+      # When you visit static.brightshard.dev, you get sent to Anubis. Anubis
+      # then proxies traffic back to the static file server. Anubis can connect
+      # to the file server because it can access localhost.
+      # This setup guarantees all traffic has to go through Anubis before being
+      # able to access the static file server.
       http://static.brightshard.dev:2001 {
       	root /srv/static
       	file_server browse
@@ -144,6 +155,10 @@ with crux;
       };
     };
   };
+
+  # services.immich = {
+  #   enable = true;
+  # };
 
   # Crypto
   services = {
