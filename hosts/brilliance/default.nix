@@ -20,6 +20,8 @@ with crux;
       openGlobalPorts.tcp = [
         18080 # Monero node
         37889 # p2pool node
+        80 # Caddy
+        443 # Caddy
       ];
       openInterfacePorts = {
         # Ports to expose to my tailnet
@@ -29,6 +31,7 @@ with crux;
             3333 # p2pool Stratum
             5000 # Nix binary cache
             25565 # Minecraft server
+            8080 # Nextcloud
           ];
           udp = [
             24454 # Proximity chat for Minecraft server
@@ -38,8 +41,6 @@ with crux;
         hoppy = {
           tcp = [
             25565 # Minecraft server
-            443 # Caddy
-            80 # Caddy ACME challenge
           ];
           udp = [
             24454 # Proximity chat for Minecraft server
@@ -94,6 +95,11 @@ with crux;
           header_up X-Real-Ip {remote_host}
           header_up X-Http-Version {http.request.proto}
         }
+      }
+
+      # Nextcloud
+      http://cloud.bs {
+        redir http://cloud.bs:8080{uri} permanent
       }
     '';
     dataDir = "/srv/caddy";
@@ -152,13 +158,32 @@ with crux;
           # https://mullvad.net/en/help/dns-over-https-and-dns-over-tls
           "194.242.2.2"
         ];
+        extra_records = [
+          {
+            name = "cloud.bs";
+            type = "A";
+            value = "100.64.0.3";
+          }
+        ];
       };
     };
   };
 
-  # services.immich = {
-  #   enable = true;
-  # };
+  services.nextcloud = {
+    enable = true;
+    package = pkgs.nextcloud32;
+    configureRedis = true;
+    home = "/srv/nextcloud";
+    autoUpdateApps.enable = true;
+    hostName = "cloud.bs";
+    config = {
+      adminpassFile = toString ../../default-pass.txt;
+      dbtype = "pgsql";
+    };
+    database.createLocally = true;
+  };
+  # nextcloud uses nginx... which conflicts with caddy...
+  services.nginx.defaultHTTPListenPort = 8080;
 
   # Crypto
   services = {
