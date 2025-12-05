@@ -184,6 +184,17 @@ with crux;
   };
   # nextcloud uses nginx... which conflicts with caddy...
   services.nginx.defaultHTTPListenPort = 8080;
+  services.ollama = {
+    enable = true;
+    acceleration = "rocm";
+    user = "ollama";
+    group = "ollama";
+    host = "0.0.0.0";
+    loadModels = [
+      "qwen3:8b"
+      "qwen3:1.7b"
+    ];
+  };
 
   # Crypto
   services = {

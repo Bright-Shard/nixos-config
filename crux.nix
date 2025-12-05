@@ -79,7 +79,7 @@ builtins
         "240.0.0.0/4"
       ];
       LINK-LOCAL = "169.254.0.0/16"; # 169.254.0.0 - 169.254.255.255
-      MULICAST = "224.0.0.0/4"; # 224.0.0.0 - 239.255.255.255
+      MULTICAST = "224.0.0.0/4"; # 224.0.0.0 - 239.255.255.255
       BROADCAST = "255.255.255.255/32";
     };
     # Note: I use `...` to represent that the rest of the address is just

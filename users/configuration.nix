@@ -19,6 +19,7 @@ in
       python313Packages.python-lsp-server
       nixd
       nixfmt-rfc-style
+      lldb
     ];
     stateVersion = bs.state-version;
   };

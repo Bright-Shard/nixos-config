@@ -25,6 +25,7 @@ with crux;
         android-tools
         nmap
         dig
+        zip
 
         # Misc
         font-manager

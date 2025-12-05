@@ -35,6 +35,13 @@ For future me when I inevitably forget how this works in 2 weeks. And for the pu
 - Connect the host to the Tailnet: Run `tailscale login --login-server https://router.brightshard.dev` and follow the onscreen instructions
 
 
+## Useful Scripts
+
+- Update with a temporary trusted substituter: `cfgupdate --option substituters 'http://<substituter>?trusted=1 http://<substituter2>?trusted=1'`
+	- Example to use Brilliance and the standard NixOS cache: `cfgupdate --option substituters 'http://brilliance.bs:5000?trusted=1 https://cache.nixos.org?trusted=1'`
+	- This command needs to be run as a Nix trusted user (by default, root is the only trusted user) since it adds a substituter
+
+
 
 # Code Layout
 

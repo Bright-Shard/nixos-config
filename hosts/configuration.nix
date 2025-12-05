@@ -254,6 +254,11 @@ mkMerge [
 
       (mkIf config.bs.gui { printing.enable = true; })
     ];
+    # Force TailScale MTU to be a specific size
+    # The default size (1280 as of Nov 2025) causes lots of packet loss for me
+    systemd.services.tailscaled.environment = {
+      TS_DEBUG_MTU = "1024";
+    };
   }
 
   # Hardware
