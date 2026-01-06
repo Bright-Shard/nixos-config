@@ -186,7 +186,7 @@ with crux;
   services.nginx.defaultHTTPListenPort = 8080;
   services.ollama = {
     enable = true;
-    acceleration = "rocm";
+    package = pkgs.ollama-rocm;
     user = "ollama";
     group = "ollama";
     host = "0.0.0.0";

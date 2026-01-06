@@ -115,8 +115,12 @@ in
             hard_tabs = false;
             tab_size = 2;
           };
+          YAML = {
+            hard_tabs = false;
+            tab_size = 2;
+          };
         };
-        # disable_ai = true;
+        disable_ai = true;
         restore_on_startup = "none";
         hard_tabs = true;
         tab_size = 3;
@@ -129,7 +133,7 @@ in
         load_direnv = "shell_hook";
         tab_bar.show = false;
         file_scan_exclusions = [ ];
-        inlay_hints.enabled = true;
+        inlay_hints.enabled = false;
         edit_predictions.mode = "subtle";
         search = {
           seed_search_query_from_cursor = "selection";
@@ -168,6 +172,7 @@ in
           defaultBranch = "main";
         };
         safe.directory = [ "/etc/nixos" ];
+        push.autoSetupRemote = true;
       };
       signing = {
         signByDefault = true;

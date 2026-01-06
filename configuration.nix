@@ -29,6 +29,7 @@ mkMerge [
         "steam"
         "steam-unwrapped"
         "minecraft-server"
+        "binaryninja-free"
       ];
     nix = {
       settings = {

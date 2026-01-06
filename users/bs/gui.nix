@@ -39,6 +39,7 @@ in
       mullvad-browser
       monero-gui
       railway-wallet
+      signal-desktop
       obs-studio
       obs-studio-plugins.input-overlay
 
@@ -53,6 +54,11 @@ in
       gamemode
       osu-lazer-bin
       prismlauncher
+      heroic
+
+      # Dev stuff
+      binaryninja-free
+      godot
     ];
 
     # Niri config

@@ -11,6 +11,7 @@ with crux;
   imports = [ "${NPINS.nixware}/framework/desktop/amd-ai-max-300-series" ];
 
   config = {
+    networking.networkmanager.wifi.backend = "iwd";
     bs = {
       gui = true;
       syncthingId = "S2FBSZJ-5JQ5Y3W-DYMYI6G-AOUUIFE-M7BZUJ2-DK5R4GG-CXZWDGK-LEQKYQK";
@@ -25,14 +26,14 @@ with crux;
 
     services = {
       ollama = {
-        enable = true;
+        enable = false;
         package = pkgs.ollama-rocm;
         user = "ollama";
         group = "ollama";
         host = "0.0.0.0";
       };
       xmrig = {
-        enable = true;
+        enable = false;
         settings = {
           autosave = false;
           cpu = {

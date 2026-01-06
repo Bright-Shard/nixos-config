@@ -26,6 +26,7 @@ with crux;
         nmap
         dig
         zip
+        unzip
 
         # Misc
         font-manager
