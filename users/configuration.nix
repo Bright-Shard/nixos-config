@@ -18,7 +18,6 @@ in
     packages = with pkgs; [
       python313Packages.python-lsp-server
       nixd
-      nixfmt-rfc-style
       lldb
     ];
     stateVersion = bs.state-version;

@@ -22,6 +22,9 @@ let
         nixpkgs.overlays = [
           (import ./nixpkgs)
           (import "${NPINS.nix-minecraft}/overlay.nix")
+          (final: prev: {
+            rosPackages = (import "${NPINS.nix-ros-overlay}" { }).rosPackages;
+          })
         ];
       }
     )

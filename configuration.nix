@@ -34,22 +34,32 @@ mkMerge [
     nix = {
       settings = {
         experimental-features = [ "nix-command" ];
-        # Self hosted binary cache
         substituters =
+          # Self hosted binary cache
           if !config.bs.apple-silicon && BUILD-META.NATIVE-HOST != "brilliance" then
             [ "http://brilliance.bs:5000" ]
           else
             [ ];
         trusted-public-keys =
+          # Self hosted binary cache
           if BUILD-META.NATIVE-HOST != "brilliance" then
             [ "brilliance:MOcBbGMoWZgVPATkKbqr0aKl/62yRX21syYAxtg7yWg=" ]
           else
             [ ];
 
-        extra-substituters = mkIf config.bs.apple-silicon [
-          "https://nixos-apple-silicon.cachix.org"
+        extra-substituters = mkMerge [
+          [
+            # https://github.com/lopsided98/nix-ros-overlay
+            "https://ros.cachix.org"
+          ]
+          (mkIf config.bs.apple-silicon [
+            "https://nixos-apple-silicon.cachix.org"
+          ])
         ];
         extra-trusted-public-keys = [
+          # https://github.com/lopsided98/nix-ros-overlay
+          "ros.cachix.org-1:dSyZxI8geDCJrwgvCOHDoAfOm5sV1wCPjBkKL+38Rvo="
+          # https://github.com/nix-community/nixos-apple-silicon
           "nixos-apple-silicon.cachix.org-1:8psDu5SA5dAD7qA0zMy5UT292TxeEPzIz8VVEr2Js20="
         ];
       };
@@ -132,7 +142,7 @@ mkMerge [
 
       # LSP tools
       nixd
-      nixfmt-rfc-style
+      nixfmt
       package-version-server
     ];
     fonts.packages = with pkgs; [

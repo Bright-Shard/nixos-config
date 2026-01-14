@@ -18,48 +18,62 @@ in
   imports = [ ./apps/zen-browser.nix ];
 
   config = {
-    home.packages = with pkgs; [
-      # WM
-      niri
-      pwvucontrol
-      bemenu
-      wl-clipboard
+    home.packages =
+      with pkgs;
+      let
+        ros = pkgs.rosPackages.jazzy;
+      in
+      [
+        # WM
+        niri
+        pwvucontrol
+        bemenu
+        wl-clipboard
 
-      # Extremely crucial package
-      # I'd die without it
-      # Seriously, where would the world be
-      pipes
+        # Extremely crucial package
+        # I'd die without it
+        # Seriously, where would the world be
+        pipes
 
-      # Apps
-      mpv
-      krita
-      xournalpp
-      tor-browser
-      mullvad-vpn
-      mullvad-browser
-      monero-gui
-      railway-wallet
-      signal-desktop
-      obs-studio
-      obs-studio-plugins.input-overlay
+        # Apps
+        mpv
+        krita
+        xournalpp
+        tor-browser
+        mullvad-vpn
+        mullvad-browser
+        monero-gui
+        railway-wallet
+        signal-desktop
+        obs-studio
+        obs-studio-plugins.input-overlay
 
-      # Utilities
-      brightnessctl
-      kdePackages.dolphin
-      kdePackages.gwenview
-      solaar
+        # Utilities
+        brightnessctl
+        kdePackages.dolphin
+        kdePackages.gwenview
+        solaar
 
-      # Gaming
-      mangohud
-      gamemode
-      osu-lazer-bin
-      prismlauncher
-      heroic
+        # Gaming
+        mangohud
+        gamemode
+        osu-lazer-bin
+        prismlauncher
+        heroic
 
-      # Dev stuff
-      binaryninja-free
-      godot
-    ];
+        # Dev stuff
+        binaryninja-free
+        godot
+
+        # ROS
+        colcon
+        (ros.buildEnv {
+          paths = with ros; [
+            desktop
+            rviz2
+          ];
+        })
+      ];
 
     # Niri config
     xdg = {
