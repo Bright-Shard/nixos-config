@@ -17,12 +17,19 @@ with crux;
       # So many bots online that if we log every violation it just fills up
       # systemd logs and I can't find anything useful...
       logViolations = false;
-      openGlobalPorts.tcp = [
-        18080 # Monero node
-        37889 # p2pool node
-        80 # Caddy
-        443 # Caddy
-      ];
+      openGlobalPorts = {
+        tcp = [
+          18080 # Monero node
+          37889 # p2pool node
+          80 # Caddy
+          443 # Caddy
+          25565 # Minecraft server
+        ];
+        udp = [
+          24454 # Proximity chat for Minecraft server
+          5520 # Hytale btw
+        ];
+      };
       openInterfacePorts = {
         # Ports to expose to my tailnet
         tailscale0 = {
@@ -30,21 +37,14 @@ with crux;
             18081 # Monero node RPC
             3333 # p2pool Stratum
             5000 # Nix binary cache
-            25565 # Minecraft server
             8080 # Nextcloud
           ];
-          udp = [
-            24454 # Proximity chat for Minecraft server
-          ];
+          udp = [ ];
         };
         # Ports to expose to the entire internet
         hoppy = {
-          tcp = [
-            25565 # Minecraft server
-          ];
-          udp = [
-            24454 # Proximity chat for Minecraft server
-          ];
+          tcp = [ ];
+          udp = [ ];
         };
       };
     };
@@ -105,8 +105,6 @@ with crux;
     dataDir = "/srv/caddy";
     email = "brightshard@brightshard.dev";
   };
-  # Let Caddy bind ports <1024
-  systemd.services.caddy.serviceConfig.AmbientCapabilities = [ "CAP_NET_BIND_SERVICE" ];
   # Ensure the static file storage folder is available
   systemd.tmpfiles.settings."11-srv-static"."/srv/static".d = {
     user = "caddy";
@@ -245,68 +243,85 @@ with crux;
       };
     };
   };
-  systemd.services = {
-    # xmrig.wants = [ "p2pool.service" ];
-    monero.wants = [ "tailscaled.service" ];
-  };
 
   # Services not included in NixOS
-  systemd.services = {
-    # Minecwaft
-    lads-mc-server = {
-      enable = true;
-      after = [ "network.target" ];
-      wantedBy = [ "default.target" ];
-      serviceConfig = {
-        Type = "simple";
-        WorkingDirectory = "/srv/mc-servers/lads";
-        ExecStart = "${pkgs.bash}/bin/bash --login run.sh";
-        User = "mc-server";
-        Group = "mc-server";
-      };
-    };
-    "49sd-bot" =
-      let
-        python = with pkgs; python313.withPackages (pypkgs: with pypkgs; [ discordpy ]);
-      in
+  systemd.services = pkgs.lib.mkMerge [
+    (mapAttrs
+      (
+        k: v:
+        v
+        // {
+          after = [ "network.target" ];
+          wantedBy = [ "default.target" ];
+        }
+      )
       {
-        enable = true;
-        after = [ "network.target" ];
-        wantedBy = [ "default.target" ];
-        serviceConfig = {
-          Type = "simple";
-          WorkingDirectory = "/srv/discord-bots/49sd";
-          ExecStart = "${python}/bin/python3 main.py";
-          User = "discord";
-          Group = "discord";
+        # Minecwaft
+        lads-mc-server = {
+          enable = false;
+          serviceConfig = {
+            Type = "simple";
+            WorkingDirectory = "/srv/mc-servers/lads";
+            ExecStart = "${pkgs.bash}/bin/bash --login run.sh";
+            User = "mc-server";
+            Group = "mc-server";
+          };
         };
-      };
-  };
+        hytale-server = {
+          enable = true;
+          serviceConfig = {
+            Type = "simple";
+            WorkingDirectory = "/srv/hytale";
+            ExecStart = "${pkgs.javaPackages.compiler.temurin-bin.jre-25}/bin/java -Xlog:aot -XX:AOTCache=Server/HytaleServer.aot -jar Server/HytaleServer.jar --assets Assets.zip --bind 173.211.12.135:5520";
+            User = "hytale";
+            Group = "hytale";
+          };
+        };
+        "49sd-bot" =
+          let
+            python = with pkgs; python313.withPackages (pypkgs: with pypkgs; [ discordpy ]);
+          in
+          {
+            enable = true;
+            serviceConfig = {
+              Type = "simple";
+              WorkingDirectory = "/srv/discord-bots/49sd";
+              ExecStart = "${python}/bin/python3 main.py";
+              User = "discord";
+              Group = "discord";
+            };
+          };
+      }
+    )
+
+    {
+      # xmrig.wants = [ "p2pool.service" ];
+      monero.wants = [ "tailscaled.service" ];
+      caddy.serviceConfig.AmbientCapabilities = [ "CAP_NET_BIND_SERVICE" ];
+    }
+  ];
 
   # Users for self-hosting shit so I can limit permissions
-  users = {
-    users = {
-      mc-server = {
-        isSystemUser = true;
-        group = "mc-server";
-        home = "/srv/mc-servers";
-        createHome = true;
-        packages = with pkgs; [ jdk ];
+  users =
+    let
+      u = name: home: {
+        name = name;
+        value = {
+          isSystemUser = true;
+          group = name;
+          home = "/srv/${home}";
+          createHome = true;
+        };
       };
-      discord = {
-        isSystemUser = true;
-        group = "discord";
-        home = "/srv/discord-bots";
-        createHome = true;
-      };
-      caddy = {
-        home = "/srv/caddy";
-        createHome = true;
-      };
+      SERVICE_USERS = listToAttrs [
+        (u "mc-server" "mc-servers")
+        (u "caddy" "caddy")
+        (u "discord" "discord-bots")
+        (u "hytale" "hytale")
+      ];
+    in
+    {
+      users = SERVICE_USERS;
+      groups = mapAttrs (name: value: { }) SERVICE_USERS;
     };
-    groups = {
-      mc-server = { };
-      discord = { };
-    };
-  };
 }

@@ -55,6 +55,22 @@
       "url": "https://github.com/nix-community/home-manager/archive/c5d67517bbcaf37e15c416219c965cc707a0ca24.tar.gz",
       "hash": "sha256-dlWl/z/rdZmPGVexkYL1VLKBMU1e5Y1DZmQfiRf60cQ="
     },
+    "nix-flatpak": {
+      "type": "GitRelease",
+      "repository": {
+        "type": "GitHub",
+        "owner": "gmodena",
+        "repo": "nix-flatpak"
+      },
+      "pre_releases": false,
+      "version_upper_bound": null,
+      "release_prefix": null,
+      "submodules": false,
+      "version": "v0.7.0",
+      "revision": "440818969ac2cbd77bfe025e884d0aa528991374",
+      "url": "https://api.github.com/repos/gmodena/nix-flatpak/tarball/refs/tags/v0.7.0",
+      "hash": "sha256-7ZCulYUD9RmJIDULTRkGLSW1faMpDlPKcbWJLYHoXcs="
+    },
     "nix-minecraft": {
       "type": "Git",
       "repository": {

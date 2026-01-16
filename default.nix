@@ -35,6 +35,7 @@ let
     "${NPINS.home-manager}/nixos"
     "${NPINS.nix-minecraft}/modules/minecraft-servers.nix"
     "${NPINS.nixos-apple-silicon}/apple-silicon-support/modules"
+    "${NPINS.nix-flatpak}/modules/nixos.nix"
   ];
 
   HOSTS = listToAttrs (

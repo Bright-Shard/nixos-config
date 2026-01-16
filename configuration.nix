@@ -178,7 +178,6 @@ mkMerge [
   {
     networking = {
       hostName = BUILD-META.HOSTNAME;
-      enableIPv6 = false;
     };
 
     i18n.defaultLocale = "en_US.UTF-8";

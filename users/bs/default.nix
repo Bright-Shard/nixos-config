@@ -51,6 +51,7 @@ with crux;
         QT_QPA_PLATFORM = "wayland";
         QT_WAYLAND_DISABLE_WINDOWDECORATION = "1";
         PATH = "/home/bs/.cargo/bin:$PATH";
+        SCCACHE_CACHE_SIZE = "50G";
       }
       # Set fcitx5 as the IME
       // (listToAttrs (
@@ -85,5 +86,10 @@ with crux;
         ];
       };
     };
+
+    home.file.".cargo/config.toml".text = ''
+      [build]
+      rustc-wrapper = "${pkgs.sccache}/bin/sccache"
+    '';
   };
 }
