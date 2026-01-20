@@ -9,9 +9,9 @@
       },
       "branch": "main",
       "submodules": false,
-      "revision": "e973584280e3b0e1d5b5a1a5e9948dc222c54af7",
-      "url": "https://github.com/catppuccin/nix/archive/e973584280e3b0e1d5b5a1a5e9948dc222c54af7.tar.gz",
-      "hash": "sha256-Cx4VETh9dGoQYDtWhre7g66d7SAr+h1h6f+SSHxVrck="
+      "revision": "48e67b4ad22072f1ae30b0ed8e1cb020cf06c611",
+      "url": "https://github.com/catppuccin/nix/archive/48e67b4ad22072f1ae30b0ed8e1cb020cf06c611.tar.gz",
+      "hash": "sha256-e0SsKnkSnq+UwZNS9ZyPJjTjabzq9TRc1hqeDnvOF1Q="
     },
     "firefox-second-sidebar": {
       "type": "GitRelease",
@@ -51,9 +51,9 @@
       },
       "branch": "master",
       "submodules": false,
-      "revision": "d21bee5abf9fb4a42b2fa7728bf671f8bb246ba6",
-      "url": "https://github.com/nix-community/home-manager/archive/d21bee5abf9fb4a42b2fa7728bf671f8bb246ba6.tar.gz",
-      "hash": "sha256-EBXKDho4t1YSgodAL6C8M3UTm8MGMZNQ9rQnceR5+6c="
+      "revision": "b56c5ad14fcf8b5bc887463552483bf000ca562a",
+      "url": "https://github.com/nix-community/home-manager/archive/b56c5ad14fcf8b5bc887463552483bf000ca562a.tar.gz",
+      "hash": "sha256-nJZkTamcXXMW+SMYiGFB6lB8l0aJw0xjssfN8xYd/Fs="
     },
     "nix-flatpak": {
       "type": "GitRelease",
@@ -106,15 +106,15 @@
       },
       "branch": "main",
       "submodules": false,
-      "revision": "233bb4e048ca11efb9b7297079213dbe1dcfb5e8",
-      "url": "https://github.com/nix-community/nixos-apple-silicon/archive/233bb4e048ca11efb9b7297079213dbe1dcfb5e8.tar.gz",
-      "hash": "sha256-YlRaFqneUIwi6PPzrwEUtO0UZIxGFS3D8fSaqnPTKzE="
+      "revision": "83a2bb509972148aa6d3f75c65103b6bfb7898af",
+      "url": "https://github.com/nix-community/nixos-apple-silicon/archive/83a2bb509972148aa6d3f75c65103b6bfb7898af.tar.gz",
+      "hash": "sha256-YyIzhZoFVE4C5P9e0wZGjx4P9IT/OTUMFF3r6iKd3UY="
     },
     "nixpkgs": {
       "type": "Channel",
       "name": "nixpkgs-unstable",
-      "url": "https://releases.nixos.org/nixpkgs/nixpkgs-26.05pre927565.13868c071cc7/nixexprs.tar.xz",
-      "hash": "sha256-wufp5c0nWh/87f9eK7xy1eZXms5zd4yl6S4SR+LfA08="
+      "url": "https://releases.nixos.org/nixpkgs/nixpkgs-26.05pre930106.bde090228871/nixexprs.tar.xz",
+      "hash": "sha256-N1BW0usecHQVLHKlH+d1NW6CS2At1s3sjpE+N0dOgl4="
     },
     "nixware": {
       "type": "Git",
@@ -125,9 +125,9 @@
       },
       "branch": "master",
       "submodules": false,
-      "revision": "7297dfc69ae9b06e984a6f69900ce25e67c76f46",
-      "url": "https://github.com/NixOS/nixos-hardware/archive/7297dfc69ae9b06e984a6f69900ce25e67c76f46.tar.gz",
-      "hash": "sha256-jJr/zDxu5evfQxlXtMrFFF68/RNj1UrctS/eIsay4k0="
+      "revision": "d447553bcbc6a178618d37e61648b19e744370df",
+      "url": "https://github.com/NixOS/nixos-hardware/archive/d447553bcbc6a178618d37e61648b19e744370df.tar.gz",
+      "hash": "sha256-qgGq7CfrYKc3IBYQ7qp0Z/ZXndQVC5Bj0N8HW9mS2rM="
     },
     "zen-browser": {
       "type": "Git",
@@ -138,9 +138,9 @@
       },
       "branch": "main",
       "submodules": false,
-      "revision": "06f61b4e4f4f6ba8027c96a5611c63dc0db12b90",
-      "url": "https://github.com/0xc000022070/zen-browser-flake/archive/06f61b4e4f4f6ba8027c96a5611c63dc0db12b90.tar.gz",
-      "hash": "sha256-z94S29l5V86h11LZbPIMbHTJyksDG63aqISsZkTTuJY="
+      "revision": "3a42efe341d068f13ffb961ed832474128b844f3",
+      "url": "https://github.com/0xc000022070/zen-browser-flake/archive/3a42efe341d068f13ffb961ed832474128b844f3.tar.gz",
+      "hash": "sha256-93pj/A2s26CUZwvCpN0CL6a1NhLpYVzidzc/Vk2GKCI="
     }
   },
   "version": 7

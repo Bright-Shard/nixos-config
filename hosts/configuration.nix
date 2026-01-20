@@ -74,24 +74,6 @@ mkMerge [
         enable = true;
         tables = mkMerge [
           {
-            # I don't have access to IPv6. To simplify my life I only deal with
-            # IPv4.
-            # The only exception is loopback interfaces... for some reason those
-            # sometimes get resolved to their IPv6 address instead of IPv4?
-            fuck_ipv6 = {
-              family = "ip6";
-              content = ''
-                chain fuckIn {
-                	type filter hook input priority -300; policy drop;
-                  iifname "lo" accept
-                }
-                chain fuckOut {
-                	type filter hook output priority -300; policy drop;
-                  iifname "lo" accept
-                }
-              '';
-            };
-
             portFilter = {
               family = "inet";
               content =
@@ -119,6 +101,7 @@ mkMerge [
                     ${portsList "udp" firewall.openGlobalPorts.udp}
 
                     ip saddr { ${concatStringsSep ", " RESERVED-IPS.IPv4.LAN} } jump lanWhitelist;
+                    ip6 saddr { ${RESERVED-IPS.IPv6.UNIQUE-LOCAL-ADDRESS} } jump lanWhitelist;
 
                     ${concatStringsSep "\n" (
                       map (interface: ''
@@ -154,12 +137,15 @@ mkMerge [
                   chain tailnetExitNodeOut {
                     type nat hook postrouting priority 99; policy accept;
                     # Ignore Tailnet->Tailnet traffic
-                    ip daddr 100.64.0.0/10 accept;
+                    ip daddr ${RESERVED-IPS.IPv4.CARRIER-GRADE-NAT} accept;
+                    ip6 daddr fd7a:115c:a1e0::/48 accept;
                     # Ignore TailScale's internal IP
                     # https://tailscale.com/kb/1381/what-is-quad100
                     ip saddr 100.100.100.100 accept;
+                    ip6 saddr fd7a:115c:a1e0::53 accept;
 
-                    iifname "tailscale0" oifname "wg0-mullvad" ip saddr 100.64.0.0/10 meta nftrace set 1 ct label set 1 masquerade;
+                    iifname "tailscale0" oifname "wg0-mullvad" ip saddr ${RESERVED-IPS.IPv4.CARRIER-GRADE-NAT} meta nftrace set 1 ct label set 1 masquerade;
+                    iifname "tailscale0" oifname "wg0-mullvad" ip6 saddr fd7a:115c:a1e0::/48 meta nftrace set 1 ct label set 1 masquerade;
                   }
                   chain tailnetExitNodeIn {
                     type filter hook prerouting priority -100; policy accept;
