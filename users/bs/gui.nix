@@ -3,9 +3,7 @@
 {
   crux,
   pkgs,
-  config,
   nixosConfig,
-  NPINS,
   ...
 }:
 
@@ -21,7 +19,7 @@ in
     home.packages =
       with pkgs;
       let
-        ros = pkgs.rosPackages.jazzy;
+        ros = pkgs.ros.rosPackages.jazzy;
       in
       [
         # WM
@@ -66,11 +64,13 @@ in
         godot
 
         # ROS
-        colcon
+        gcc
         (ros.buildEnv {
           paths = with ros; [
+            pkgs.ros.colcon
+            ament-cmake-core
+            python-cmake-module
             desktop
-            rviz2
           ];
         })
       ];

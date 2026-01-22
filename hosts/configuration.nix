@@ -5,7 +5,6 @@
   lib,
   config,
   BUILD-META,
-  NPINS,
   ...
 }:
 
@@ -502,18 +501,7 @@ mkMerge [
     };
     services.flatpak = {
       enable = true;
-      packages = [
-        # rec {
-        #   appId = "com.hytale.launcher";
-        #   sha256 = "sha256-s6jf3iJvsP7+wUrLldKHwDG7TMley1tyhPQHY6ezu/w=";
-        #   bundle = toString (
-        #     pkgs.fetchurl {
-        #       url = "https://launcher.hytale.com/builds/release/linux/amd64/hytale-launcher-latest.flatpak";
-        #       inherit sha256;
-        #     }
-        #   );
-        # }
-      ];
+      packages = [ ];
     };
   })
 ]

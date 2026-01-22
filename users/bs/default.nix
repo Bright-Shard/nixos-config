@@ -2,7 +2,6 @@
   pkgs,
   crux,
   nixosConfig,
-  NPINS,
   ...
 }:
 
@@ -37,7 +36,6 @@ with crux;
 
         # Dev Tooling
         rustup
-        clang
         mold
         socat
         jq
@@ -52,6 +50,7 @@ with crux;
         QT_WAYLAND_DISABLE_WINDOWDECORATION = "1";
         PATH = "/home/bs/.cargo/bin:$PATH";
         SCCACHE_CACHE_SIZE = "50G";
+        CC = "gcc";
       }
       # Set fcitx5 as the IME
       // (listToAttrs (

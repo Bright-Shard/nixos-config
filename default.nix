@@ -6,7 +6,6 @@ let
     readFile
     readSubdirs
     listToAttrs
-    map
     ;
 
   NPINS = import ./npins;
@@ -15,6 +14,9 @@ let
     inherit NPINS crux;
     BUILD-META = { inherit NATIVE-HOST HOSTS SPECIAL-ARGS; };
   };
+
+  TANGLED = import "${NPINS.tangled}";
+
   MODULES = [
     (
       { ... }:
@@ -23,7 +25,8 @@ let
           (import ./nixpkgs)
           (import "${NPINS.nix-minecraft}/overlay.nix")
           (final: prev: {
-            rosPackages = (import "${NPINS.nix-ros-overlay}" { }).rosPackages;
+            ros = import "${NPINS.nix-ros-overlay}" { };
+            tangled = TANGLED.packages.${builtins.currentSystem};
           })
         ];
       }
@@ -36,7 +39,8 @@ let
     "${NPINS.nix-minecraft}/modules/minecraft-servers.nix"
     "${NPINS.nixos-apple-silicon}/apple-silicon-support/modules"
     "${NPINS.nix-flatpak}/modules/nixos.nix"
-  ];
+  ]
+  ++ (builtins.attrValues TANGLED.nixosModules);
 
   HOSTS = listToAttrs (
     map (host: {

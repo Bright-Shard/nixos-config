@@ -51,9 +51,9 @@
       },
       "branch": "master",
       "submodules": false,
-      "revision": "b56c5ad14fcf8b5bc887463552483bf000ca562a",
-      "url": "https://github.com/nix-community/home-manager/archive/b56c5ad14fcf8b5bc887463552483bf000ca562a.tar.gz",
-      "hash": "sha256-nJZkTamcXXMW+SMYiGFB6lB8l0aJw0xjssfN8xYd/Fs="
+      "revision": "9997de2f62d1875644f02ddf96cf485a4baecb6f",
+      "url": "https://github.com/nix-community/home-manager/archive/9997de2f62d1875644f02ddf96cf485a4baecb6f.tar.gz",
+      "hash": "sha256-i25tkhqjsfo0YKz8To/+gzazW1v4f8qUGqJQ8OLrkqE="
     },
     "nix-flatpak": {
       "type": "GitRelease",
@@ -113,8 +113,8 @@
     "nixpkgs": {
       "type": "Channel",
       "name": "nixpkgs-unstable",
-      "url": "https://releases.nixos.org/nixpkgs/nixpkgs-26.05pre930106.bde090228871/nixexprs.tar.xz",
-      "hash": "sha256-N1BW0usecHQVLHKlH+d1NW6CS2At1s3sjpE+N0dOgl4="
+      "url": "https://releases.nixos.org/nixpkgs/nixpkgs-26.05pre930822.ed142ab1b3a0/nixexprs.tar.xz",
+      "hash": "sha256-XH6awru9NnBc/m+2YhRNT8r1PAKEiPGF3gs//F3ods0="
     },
     "nixware": {
       "type": "Git",
@@ -129,6 +129,18 @@
       "url": "https://github.com/NixOS/nixos-hardware/archive/d447553bcbc6a178618d37e61648b19e744370df.tar.gz",
       "hash": "sha256-qgGq7CfrYKc3IBYQ7qp0Z/ZXndQVC5Bj0N8HW9mS2rM="
     },
+    "tangled": {
+      "type": "Git",
+      "repository": {
+        "type": "Git",
+        "url": "https://tangled.org/tangled.org/core"
+      },
+      "branch": "master",
+      "submodules": false,
+      "revision": "96413285253c1b042eaaf4526429ae1699874e31",
+      "url": null,
+      "hash": "sha256-Dg6ozn6mSuau7qytKTyQBJXVNJcMJzUrvdBRWLp+Yg8="
+    },
     "zen-browser": {
       "type": "Git",
       "repository": {
@@ -138,9 +150,9 @@
       },
       "branch": "main",
       "submodules": false,
-      "revision": "3a42efe341d068f13ffb961ed832474128b844f3",
-      "url": "https://github.com/0xc000022070/zen-browser-flake/archive/3a42efe341d068f13ffb961ed832474128b844f3.tar.gz",
-      "hash": "sha256-93pj/A2s26CUZwvCpN0CL6a1NhLpYVzidzc/Vk2GKCI="
+      "revision": "37149a5b77e8fd2b5332e8cec9edf39ca5b8e8bc",
+      "url": "https://github.com/0xc000022070/zen-browser-flake/archive/37149a5b77e8fd2b5332e8cec9edf39ca5b8e8bc.tar.gz",
+      "hash": "sha256-w10iy/aqd5LtD78NDWWG+eKGzkb+cGhAAo7PVciLbWE="
     }
   },
   "version": 7
