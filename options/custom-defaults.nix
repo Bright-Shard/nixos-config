@@ -13,13 +13,21 @@ in
   options = {
     # Set all users to use the default shell by default.
     users.users = mkOption {
-      type = lib.types.attrsOf (lib.types.submodule { config.useDefaultShell = mkDefault true; });
+      type = types.attrsOf (types.submodule { config.useDefaultShell = mkDefault true; });
     };
     # Bypass workqueues on LUKS-encrypted drives, improving performance by
     # making writes synchronous
     # https://search.nixos.org/options?channel=unstable&show=boot.initrd.luks.devices.%3Cname%3E.bypassWorkqueues&from=0
     boot.initrd.luks.devices = mkOption {
       type = types.attrsOf (types.submodule { config.bypassWorkqueues = mkDefault true; });
+    };
+    # https://github.com/NixOS/nixpkgs/issues/380625#issuecomment-2774925408
+    security.pam.services = mkOption {
+      type = types.attrsOf (
+        types.submodule {
+          config.allowNullPassword = mkDefault true;
+        }
+      );
     };
   };
 }

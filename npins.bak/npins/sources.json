@@ -9,38 +9,9 @@
       },
       "branch": "main",
       "submodules": false,
-      "revision": "48e67b4ad22072f1ae30b0ed8e1cb020cf06c611",
-      "url": "https://github.com/catppuccin/nix/archive/48e67b4ad22072f1ae30b0ed8e1cb020cf06c611.tar.gz",
-      "hash": "sha256-e0SsKnkSnq+UwZNS9ZyPJjTjabzq9TRc1hqeDnvOF1Q="
-    },
-    "firefox-second-sidebar": {
-      "type": "GitRelease",
-      "repository": {
-        "type": "GitHub",
-        "owner": "aminought",
-        "repo": "firefox-second-sidebar"
-      },
-      "pre_releases": false,
-      "version_upper_bound": null,
-      "release_prefix": null,
-      "submodules": false,
-      "version": "v2.0",
-      "revision": "5713e0762451d6cb1ffaf710901ce1aebc93fda3",
-      "url": "https://api.github.com/repos/aminought/firefox-second-sidebar/tarball/v2.0",
-      "hash": "sha256-aJs74EqAVMJBPS6ox2V7S9Vp47PoHlGbBuF5DBWqwiI="
-    },
-    "fx-autoconfig": {
-      "type": "Git",
-      "repository": {
-        "type": "GitHub",
-        "owner": "MrOtherGuy",
-        "repo": "fx-autoconfig"
-      },
-      "branch": "master",
-      "submodules": false,
-      "revision": "76232083171a8d609bf0258549d843b0536685e1",
-      "url": "https://github.com/MrOtherGuy/fx-autoconfig/archive/76232083171a8d609bf0258549d843b0536685e1.tar.gz",
-      "hash": "sha256-xiCikg8c855w+PCy7Wmc3kPwIHr80pMkkK7mFQbPCs4="
+      "revision": "d7a8632c0d8d144478aac1a8c8d5083b770cbb03",
+      "url": "https://github.com/catppuccin/nix/archive/d7a8632c0d8d144478aac1a8c8d5083b770cbb03.tar.gz",
+      "hash": "sha256-q4arZjXnLiuMnLzO972lrXIGdzyGb4DGaIt69CcCYdE="
     },
     "home-manager": {
       "type": "Git",
@@ -51,9 +22,9 @@
       },
       "branch": "master",
       "submodules": false,
-      "revision": "9997de2f62d1875644f02ddf96cf485a4baecb6f",
-      "url": "https://github.com/nix-community/home-manager/archive/9997de2f62d1875644f02ddf96cf485a4baecb6f.tar.gz",
-      "hash": "sha256-i25tkhqjsfo0YKz8To/+gzazW1v4f8qUGqJQ8OLrkqE="
+      "revision": "eec72f127831326b042d1f35003767a4ab6a9516",
+      "url": "https://github.com/nix-community/home-manager/archive/eec72f127831326b042d1f35003767a4ab6a9516.tar.gz",
+      "hash": "sha256-EE2bs7xFrC64qrj0N2zP6E6e/nmhcdw6v/grdYi+BiY="
     },
     "nix-flatpak": {
       "type": "GitRelease",
@@ -70,19 +41,6 @@
       "revision": "440818969ac2cbd77bfe025e884d0aa528991374",
       "url": "https://api.github.com/repos/gmodena/nix-flatpak/tarball/refs/tags/v0.7.0",
       "hash": "sha256-7ZCulYUD9RmJIDULTRkGLSW1faMpDlPKcbWJLYHoXcs="
-    },
-    "nix-minecraft": {
-      "type": "Git",
-      "repository": {
-        "type": "GitHub",
-        "owner": "Infinidoge",
-        "repo": "nix-minecraft"
-      },
-      "branch": "master",
-      "submodules": false,
-      "revision": "f888492aa1a1eeb0114cf78af40d44e8300e002e",
-      "url": "https://github.com/Infinidoge/nix-minecraft/archive/f888492aa1a1eeb0114cf78af40d44e8300e002e.tar.gz",
-      "hash": "sha256-LpOWVXsHx20x8eRIhn23Q0icmV3Z6ZeFpAPzEqldXFk="
     },
     "nix-ros-overlay": {
       "type": "Git",
@@ -106,15 +64,15 @@
       },
       "branch": "main",
       "submodules": false,
-      "revision": "83a2bb509972148aa6d3f75c65103b6bfb7898af",
-      "url": "https://github.com/nix-community/nixos-apple-silicon/archive/83a2bb509972148aa6d3f75c65103b6bfb7898af.tar.gz",
-      "hash": "sha256-YyIzhZoFVE4C5P9e0wZGjx4P9IT/OTUMFF3r6iKd3UY="
+      "revision": "749992a1cd11092ac9eea8a05fb953f591df59db",
+      "url": "https://github.com/nix-community/nixos-apple-silicon/archive/749992a1cd11092ac9eea8a05fb953f591df59db.tar.gz",
+      "hash": "sha256-/3Hk9YEI+9vA2+4AFErByc1V3LcCDNThmXYhFWlkQiU="
     },
     "nixpkgs": {
       "type": "Channel",
       "name": "nixpkgs-unstable",
-      "url": "https://releases.nixos.org/nixpkgs/nixpkgs-26.05pre930822.ed142ab1b3a0/nixexprs.tar.xz",
-      "hash": "sha256-XH6awru9NnBc/m+2YhRNT8r1PAKEiPGF3gs//F3ods0="
+      "url": "https://releases.nixos.org/nixpkgs/nixpkgs-26.05pre934966.13b0f9e6ac78/nixexprs.tar.xz",
+      "hash": "sha256-XbbfHzR238bSuaXUsOj6zJnCqU2C2xeHcZYKlfwxCso="
     },
     "nixware": {
       "type": "Git",
@@ -125,9 +83,21 @@
       },
       "branch": "master",
       "submodules": false,
-      "revision": "d447553bcbc6a178618d37e61648b19e744370df",
-      "url": "https://github.com/NixOS/nixos-hardware/archive/d447553bcbc6a178618d37e61648b19e744370df.tar.gz",
-      "hash": "sha256-qgGq7CfrYKc3IBYQ7qp0Z/ZXndQVC5Bj0N8HW9mS2rM="
+      "revision": "a351494b0e35fd7c0b7a1aae82f0afddf4907aa8",
+      "url": "https://github.com/NixOS/nixos-hardware/archive/a351494b0e35fd7c0b7a1aae82f0afddf4907aa8.tar.gz",
+      "hash": "sha256-QEDtctEkOsbx8nlFh4yqPEOtr4tif6KTqWwJ37IM2ds="
+    },
+    "tangled": {
+      "type": "Git",
+      "repository": {
+        "type": "Git",
+        "url": "https://tangled.org/tangled.org/core"
+      },
+      "branch": "master",
+      "submodules": false,
+      "revision": "c2049613392b034666f88e5c2b55d991f0c51040",
+      "url": null,
+      "hash": "sha256-WsAOFNVPoXCDdBzd60XvbpH2FNaR+WmRdtxKY7iAME0="
     },
     "zen-browser": {
       "type": "Git",
@@ -138,9 +108,9 @@
       },
       "branch": "main",
       "submodules": false,
-      "revision": "37149a5b77e8fd2b5332e8cec9edf39ca5b8e8bc",
-      "url": "https://github.com/0xc000022070/zen-browser-flake/archive/37149a5b77e8fd2b5332e8cec9edf39ca5b8e8bc.tar.gz",
-      "hash": "sha256-w10iy/aqd5LtD78NDWWG+eKGzkb+cGhAAo7PVciLbWE="
+      "revision": "a318ae926a6f96cce4cb8498ad986b33a6d44b21",
+      "url": "https://github.com/0xc000022070/zen-browser-flake/archive/a318ae926a6f96cce4cb8498ad986b33a6d44b21.tar.gz",
+      "hash": "sha256-hU6J/bU8mHhJrV/asVDQ9oY7gcH/MMSOGtr4iOYy8lc="
     }
   },
   "version": 7

@@ -87,11 +87,13 @@ mkMerge [
   {
     users = {
       users = {
-        # idk why but it complains the root shell is set twice if this is true
-        root.useDefaultShell = false;
+        root = {
+          hashedPassword = "!";
+          # idk why but it complains the root shell is set twice if this is true
+          useDefaultShell = false;
+        };
         bs = {
           isNormalUser = true;
-          createHome = false;
           extraGroups = [ "wheel" ];
           openssh.authorizedKeys.keys = [ KEYS.SSH-PUBLIC ];
         };
@@ -116,12 +118,17 @@ mkMerge [
           zen-browser.homeModules.default
           ./users/configuration.nix
         ];
-        users = listToAttrs (
-          map (username: {
-            name = username;
-            value = ./users/${username};
-          }) (readSubdirs ./users)
-        );
+        users =
+          let
+            allUsers = readSubdirs ./users;
+            users = filter (user: hasAttr user config.users.users) allUsers;
+          in
+          listToAttrs (
+            map (username: {
+              name = username;
+              value = ./users/${username};
+            }) users
+          );
         extraSpecialArgs = specialArgs // {
           nixosConfig = config;
         };
@@ -135,6 +142,8 @@ mkMerge [
       bat
       ripgrep
       busybox
+      zip
+      unzip
       curl
       wget
       jq
@@ -144,6 +153,10 @@ mkMerge [
       nixd
       nixfmt
       package-version-server
+
+      # Docs
+      man-pages
+      man-pages-posix
     ];
     fonts.packages = with pkgs; [
       nerd-fonts.shure-tech-mono

@@ -41,6 +41,7 @@ For future me when I inevitably forget how this works in 2 weeks. And for the pu
 	- Example to use Brilliance and the standard NixOS cache: `cfgupdate --option substituters '["http://brilliance.bs:5000?trusted=1" "https://cache.nixos.org"]'`
 	- This command needs to be run as a Nix trusted user (by default, root is the only trusted user) since it adds a substituter
 - Clean old generations: `nix-collect-garbage -d`
+- Temporarily disable all substituters: `cfgupdate --option substituters ''`
 
 
 

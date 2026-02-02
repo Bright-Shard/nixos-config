@@ -4,75 +4,82 @@
   crux,
   pkgs,
   nixosConfig,
+  NPINS,
   ...
 }:
 
 with crux;
 let
   inherit (nixosConfig) bs;
+  inherit (pkgs) lib;
+  inherit (lib) mkMerge mkIf;
 in
 
 {
-  imports = [ ./apps/zen-browser.nix ];
-
   config = {
     home.packages =
       with pkgs;
-      let
-        ros = pkgs.ros.rosPackages.jazzy;
-      in
-      [
-        # WM
-        niri
-        pwvucontrol
-        bemenu
-        wl-clipboard
+      mkMerge [
+        [
+          # WM
+          niri
+          pwvucontrol
+          bemenu
+          wl-clipboard
 
-        # Extremely crucial package
-        # I'd die without it
-        # Seriously, where would the world be
-        pipes
+          # Extremely crucial package
+          # I'd die without it
+          # Seriously, where would the world be
+          pipes
 
-        # Apps
-        mpv
-        krita
-        xournalpp
-        tor-browser
-        mullvad-vpn
-        mullvad-browser
-        monero-gui
-        railway-wallet
-        signal-desktop
-        obs-studio
-        obs-studio-plugins.input-overlay
+          # Apps
+          mpv
+          krita
+          xournalpp
+          tor-browser
+          mullvad-vpn
+          mullvad-browser
+          monero-gui
+          railway-wallet
+          signal-desktop
+          obs-studio
+          obs-studio-plugins.input-overlay
 
-        # Utilities
-        brightnessctl
-        kdePackages.dolphin
-        kdePackages.gwenview
-        solaar
+          # Utilities
+          brightnessctl
+          kdePackages.dolphin
+          kdePackages.gwenview
+          solaar
+          coppwr
 
-        # Gaming
-        mangohud
-        gamemode
-        osu-lazer-bin
-        prismlauncher
-        heroic
+          # Gaming
+          mangohud
+          gamemode
+          osu-lazer-bin
+          prismlauncher
+          heroic
+          r2modman
 
-        # Dev stuff
-        binaryninja-free
-        godot
+          # Dev stuff
+          binaryninja-free
+          godot
+        ]
 
-        # ROS
-        gcc
-        (ros.buildEnv {
-          paths = with ros; [
-            pkgs.ros.colcon
-            ament-cmake-core
-            python-cmake-module
-            desktop
-          ];
-        })
+        (
+          let
+            ros = pkgs.ros.rosPackages.jazzy;
+          in
+          mkIf bs.ros [
+            (ros.buildEnv {
+              paths = with ros; [
+                pkgs.ros.colcon
+                ament-cmake-core
+                python-cmake-module
+                desktop
+              ];
+            })
+          ]
+        )
       ];
 
     # Niri config
@@ -118,6 +125,49 @@ in
       waybar = import ./apps/waybar.nix;
       # vesktop = import ./apps/vesktop.nix;
       alacritty.enable = true;
+      zen-browser = {
+        enable = true;
+        installFxAutoconfig = false;
+        additionalPolicies = { };
+        profiles."default" = rec {
+          containers = {
+            Google = {
+              color = "blue";
+              icon = "fence";
+              id = 1;
+            };
+            School = {
+              color = "green";
+              icon = "fruit";
+              id = 2;
+            };
+          };
+          spaces = {
+            Default = {
+              id = "00000000-0000-0000-0000-000000000001";
+              position = 1;
+              icon = "🌐";
+            };
+            Afia = {
+              id = "00000000-0000-0000-0000-000000000002";
+              position = 2;
+              icon = "🛠️";
+            };
+            School = {
+              id = "00000000-0000-0000-0000-000000000003";
+              position = 3;
+              icon = "📚";
+              container = containers.School.id;
+            };
+          };
+          fx-autoconfig-scripts = [
+            # "${NPINS.firefox-second-sidebar}/src"
+            (pkgs.writeTextDir "test.uc.js" ''
+              console.log("Hi mom, I'm loaded!");
+            '')
+          ];
+        };
+      };
     };
 
     services.playerctld.enable = true;

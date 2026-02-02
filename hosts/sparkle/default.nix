@@ -6,6 +6,7 @@
   config = {
     bs = {
       gui = true;
+      ros = true;
       syncthingId = "IC2AOF2-HHOYJ3S-2SGCGET-7JETQ7T-UP2IEWR-ZYPEDHI-6EU4PHE-5UU33AC";
       mullvad = true;
       mod = "Alt+Super";

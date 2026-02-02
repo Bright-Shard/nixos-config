@@ -23,7 +23,6 @@ let
       {
         nixpkgs.overlays = [
           (import ./nixpkgs)
-          (import "${NPINS.nix-minecraft}/overlay.nix")
           (final: prev: {
             ros = import "${NPINS.nix-ros-overlay}" { };
             tangled = TANGLED.packages.${builtins.currentSystem};
@@ -36,7 +35,6 @@ let
     ./hosts/configuration.nix
     "${NPINS.catppuccin}/modules/nixos"
     "${NPINS.home-manager}/nixos"
-    "${NPINS.nix-minecraft}/modules/minecraft-servers.nix"
     "${NPINS.nixos-apple-silicon}/apple-silicon-support/modules"
     "${NPINS.nix-flatpak}/modules/nixos.nix"
   ]

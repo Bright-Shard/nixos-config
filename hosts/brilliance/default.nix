@@ -40,7 +40,9 @@ lib.mkMerge [
   # The system itself
   {
     bs = {
-      gui = false;
+      gui = true;
+      mod = "Ctrl";
+      altMod = "Alt + Ctrl";
       syncthingId = "JU2AJV4-X66ZQKW-M7JXNXZ-MW562LB-JF7WN4U-2ITMK6F-E4XYWBB-HIEFVQE";
       mullvad = false;
       state-version = "25.11";
@@ -52,7 +54,10 @@ lib.mkMerge [
         fsType = "ext4";
       };
     };
-    hardware.amdgpu.opencl.enable = true;
+    hardware = {
+      amdgpu.opencl.enable = true;
+      bluetooth.enable = true;
+    };
   }
 
   # Firewall, routing, etc. for self-hosted services
@@ -69,7 +74,6 @@ lib.mkMerge [
           80 # Caddy
           443 # Caddy
           25565 # Minecraft server
-          22 # SSH, public since it's used for Git
         ];
         udp = [
           24454 # Proximity chat for Minecraft server
@@ -471,5 +475,38 @@ lib.mkMerge [
           };
         }
       ];
+  }
+
+  # Guest user & GUI
+  {
+    services = {
+      desktopManager.plasma6.enable = true;
+      displayManager = {
+        enable = true;
+        sddm = {
+          enable = true;
+          autoNumlock = true;
+          autoLogin.relogin = true;
+          wayland = {
+            enable = true;
+            compositor = "kwin";
+          };
+        };
+        autoLogin.user = "guest";
+        defaultSession = "plasma";
+      };
+    };
+    users = {
+      users.guest = {
+        isNormalUser = true;
+        group = "guest";
+        password = "";
+      };
+      groups.guest = { };
+    };
+    systemd.sleep.extraConfig = ''
+      AllowSuspend=no
+      AllowHibernation=no
+    '';
   }
 ]

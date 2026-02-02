@@ -1,7 +1,6 @@
 {
   lib,
   crux,
-  config,
   ...
 }:
 
@@ -23,6 +22,11 @@ in
       gui = mkOption {
         description = "Installs GUI programs (e.g. the 1Password GUI) when enabled.";
         type = types.bool;
+      };
+      ros = mkOption {
+        description = "Installs ROS dev tooling.";
+        type = types.bool;
+        default = false;
       };
       syncthingId = mkOption {
         description = "A unique ID for this host in Syncthing.";
