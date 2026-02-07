@@ -74,6 +74,7 @@ lib.mkMerge [
           80 # Caddy
           443 # Caddy
           25565 # Minecraft server
+          25566 # avr Minecraft server
         ];
         udp = [
           24454 # Proximity chat for Minecraft server
@@ -391,6 +392,33 @@ lib.mkMerge [
       group = "caddy";
     };
 
+    services.minecraft-servers = {
+      enable = true;
+      eula = true;
+      openFirewall = false;
+
+      user = "mc-server";
+      group = "mc-server";
+      dataDir = "/srv/mc-servers";
+      managementSystem.tmux = {
+        enable = true;
+        socketPath = name: "/srv/mc-servers/${name}.sock";
+      };
+
+      servers.avr = {
+        enable = true;
+        package = pkgs.minecraftServers.vanilla;
+        whitelist = PRIV.MC.AVR.WHITELIST;
+        operators = PRIV.MC.AVR.OPS;
+        serverProperties = {
+          white-list = true;
+          enforce-whitelist = true;
+          server-port = 25566;
+          spawn-protection = -1;
+        };
+      };
+    };
+
     # These don't have built-in NixOS modules
     systemd.services =
       mapAttrs
@@ -409,6 +437,16 @@ lib.mkMerge [
             serviceConfig = {
               Type = "simple";
               WorkingDirectory = "/srv/mc-servers/lads";
+              ExecStart = "${pkgs.bash}/bin/bash --login run.sh";
+              User = "mc-server";
+              Group = "mc-server";
+            };
+          };
+          avr-mc-server = {
+            enable = false;
+            serviceConfig = {
+              Type = "simple";
+              WorkingDirectory = "/srv/mc-servers/avr";
               ExecStart = "${pkgs.bash}/bin/bash --login run.sh";
               User = "mc-server";
               Group = "mc-server";

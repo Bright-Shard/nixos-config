@@ -55,6 +55,19 @@
       "url": "https://api.github.com/repos/gmodena/nix-flatpak/tarball/refs/tags/v0.7.0",
       "hash": "sha256-7ZCulYUD9RmJIDULTRkGLSW1faMpDlPKcbWJLYHoXcs="
     },
+    "nix-minecraft": {
+      "type": "Git",
+      "repository": {
+        "type": "GitHub",
+        "owner": "Infinidoge",
+        "repo": "nix-minecraft"
+      },
+      "branch": "master",
+      "submodules": false,
+      "revision": "8958a5a4259e1aebf4916823bf463faaf2538566",
+      "url": "https://github.com/Infinidoge/nix-minecraft/archive/8958a5a4259e1aebf4916823bf463faaf2538566.tar.gz",
+      "hash": "sha256-rqYl9B+4shcM5b6OYjT+qdsdQNJ7SY64/xcPIb96NzU="
+    },
     "nix-ros-overlay": {
       "type": "Git",
       "repository": {

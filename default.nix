@@ -16,6 +16,7 @@ let
   };
 
   TANGLED = import "${NPINS.tangled}";
+  NIX-MINECRAFT = import "${NPINS.nix-minecraft}";
 
   MODULES = [
     (
@@ -37,6 +38,7 @@ let
     "${NPINS.home-manager}/nixos"
     "${NPINS.nixos-apple-silicon}/apple-silicon-support/modules"
     "${NPINS.nix-flatpak}/modules/nixos.nix"
+    NIX-MINECRAFT.nixosModules.minecraft-servers
   ]
   ++ (builtins.attrValues TANGLED.nixosModules);
 

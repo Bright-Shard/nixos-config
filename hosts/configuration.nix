@@ -287,7 +287,10 @@ mkMerge [
           # - Performance CPU governor
           # - Maxes the GPU
           perf = {
-            main.summary = "Performance profile";
+            main = {
+              summary = "Performance profile";
+              include = "latency-performance";
+            };
             scheduler.isolated_cores = "";
             cpu = {
               boost = 1;
