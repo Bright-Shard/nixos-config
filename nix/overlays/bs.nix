@@ -1,9 +1,14 @@
+# My personal nixpkgs overlay
+
 final: prev:
 
 let
-  pkgs = final;
+  pkgs = prev;
   inherit (pkgs) lib;
+  crux = import ../../crux.nix;
 in
+with crux;
+
 {
   # nixpkgs can be out-of-date...
   proton-ge-bin = prev.proton-ge-bin.overrideAttrs (old: rec {
@@ -49,6 +54,11 @@ in
     '';
   };
 
+  helium = DEPS.helium-nix.packages.${currentSystem}.helium;
+  tangled = DEPS.tangled.overlays.default final prev;
+
   # Compat for flakes
   legacyPackages = lib.genAttrs lib.systems.flakeExposed (system: pkgs);
+  # idk the ros overlay gets mad without this
+  tbb_2021_11 = prev.onetbb;
 }

@@ -1,5 +1,4 @@
 {
-  NPINS,
   crux,
   pkgs,
   lib,
@@ -7,14 +6,13 @@
   ...
 }:
 
-with crux;
 let
   inherit (lib)
     mkOption
     types
-    mkMerge
     ;
 in
+with crux;
 
 let
   # https://mozilla.github.io/policy-templates
@@ -121,7 +119,7 @@ in
         # 2. We add a post install hook that installs fx-autoconfig
         package =
           let
-            zen-with-policies = (import NPINS.zen-browser { inherit pkgs; }).beta-unwrapped.override {
+            zen-with-policies = DEPS.zen-browser.packages.${currentSystem}.beta-unwrapped.override {
               # Apply custom Firefox policies
               policies = lib.attrsets.recursiveUpdate policies cfg.additionalPolicies;
             };
@@ -136,11 +134,11 @@ in
                     chmod -R 755 $prefs
 
                     cat > $prefs/config-prefs.js << EOF
-                    ${readFile "${NPINS.fx-autoconfig}/program/defaults/pref/config-prefs.js"}
+                    ${readFile "${DEPS.fx-autoconfig}/program/defaults/pref/config-prefs.js"}
                     EOF
 
                     cat > $lib/config.js << EOF
-                    ${readFile "${NPINS.fx-autoconfig}/program/config.js"}
+                    ${readFile "${DEPS.fx-autoconfig}/program/config.js"}
                     EOF
                   '';
                 }
@@ -172,7 +170,7 @@ in
               name = ".zen/${profileName}/chrome/utils";
               value = {
                 recursive = true;
-                source = "${NPINS.fx-autoconfig}/profile/chrome/utils";
+                source = "${DEPS.fx-autoconfig}/profile/chrome/utils";
               };
             }
             {

@@ -4,7 +4,6 @@
   crux,
   pkgs,
   nixosConfig,
-  NPINS,
   ...
 }:
 
@@ -33,6 +32,7 @@ in
           pipes
 
           # Apps
+          helium
           mpv
           krita
           xournalpp
@@ -67,17 +67,18 @@ in
 
         (
           let
-            ros = pkgs.ros.rosPackages.jazzy;
+            ros = pkgs.rosPackages.jazzy;
           in
           mkIf bs.ros [
-            (ros.buildEnv {
-              paths = with ros; [
-                pkgs.ros.colcon
-                ament-cmake-core
-                python-cmake-module
-                desktop
-              ];
-            })
+            # colcon
+
+            # (ros.buildEnv {
+            #   paths = with ros; [
+            #     ament-cmake-core
+            #     python-cmake-module
+            #     desktop
+            #   ];
+            # })
           ]
         )
       ];
@@ -123,7 +124,6 @@ in
     # Apps managed by home-manager
     programs = {
       waybar = import ./apps/waybar.nix;
-      # vesktop = import ./apps/vesktop.nix;
       alacritty.enable = true;
       zen-browser = {
         enable = true;
@@ -161,7 +161,7 @@ in
             };
           };
           fx-autoconfig-scripts = [
-            # "${NPINS.firefox-second-sidebar}/src"
+            # "${DEPS.firefox-second-sidebar}/src"
             (pkgs.writeTextDir "test.uc.js" ''
               console.log("Hi mom, I'm loaded!");
             '')

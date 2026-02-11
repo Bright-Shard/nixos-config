@@ -6,11 +6,11 @@
   ...
 }:
 
-with crux;
 let
   containers = config.bs.containers;
-  containerNames = attrNames containers;
+  containerNames = builtins.attrNames containers;
 in
+with crux;
 
 {
   systemd.targets.containers = {

@@ -1,69 +1,11 @@
 let
   crux = import ./crux.nix;
 
-  inherit (crux)
-    replaceStrings
-    readFile
-    readSubdirs
-    listToAttrs
-    ;
-
-  NPINS = import ./npins;
-  NATIVE-HOST = replaceStrings [ "\n" ] [ "" ] (readFile ./HOSTNAME);
-  SPECIAL-ARGS = {
-    inherit NPINS crux;
-    BUILD-META = { inherit NATIVE-HOST HOSTS SPECIAL-ARGS; };
-  };
-
-  TANGLED = import "${NPINS.tangled}";
-  NIX-MINECRAFT = import "${NPINS.nix-minecraft}";
-
-  MODULES = [
-    (
-      { ... }:
-      {
-        nixpkgs.overlays = [
-          (import ./nixpkgs)
-          (final: prev: {
-            ros = import "${NPINS.nix-ros-overlay}" { };
-            tangled = TANGLED.packages.${builtins.currentSystem};
-          })
-        ];
-      }
-    )
-    ./options
-    ./configuration.nix
-    ./hosts/configuration.nix
-    "${NPINS.catppuccin}/modules/nixos"
-    "${NPINS.home-manager}/nixos"
-    "${NPINS.nixos-apple-silicon}/apple-silicon-support/modules"
-    "${NPINS.nix-flatpak}/modules/nixos.nix"
-    NIX-MINECRAFT.nixosModules.minecraft-servers
-  ]
-  ++ (builtins.attrValues TANGLED.nixosModules);
-
-  HOSTS = listToAttrs (
-    map (host: {
-      name = host;
-      value = import "${NPINS.nixpkgs}/nixos/lib/eval-config.nix" {
-        system = builtins.currentSystem;
-        specialArgs = SPECIAL-ARGS // {
-          BUILD-META = SPECIAL-ARGS.BUILD-META // {
-            HOSTNAME = host;
-          };
-        };
-        modules = MODULES ++ [
-          ./hosts/${host}
-          ./hosts/${host}/hardware-configuration.nix
-        ];
-      };
-    }) (readSubdirs ./hosts)
-  );
-  BUILT-CONFIG = HOSTS.${NATIVE-HOST};
+  cfg = crux.HOSTS.${crux.NATIVE-HOSTNAME};
 in
 
 {
-  inherit (BUILT-CONFIG) pkgs config options;
-  inherit (BUILT-CONFIG.config.system.build) vm vmWithBootloader;
-  system = BUILT-CONFIG.config.system.build.toplevel;
+  inherit (cfg) pkgs config options;
+  inherit (cfg.config.system.build) vm vmWithBootloader;
+  system = cfg.config.system.build.toplevel;
 }

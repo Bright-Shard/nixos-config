@@ -1,7 +1,9 @@
-{ NPINS, pkgs, ... }:
+{ crux, pkgs, ... }:
+
+with crux;
 
 {
-  imports = [ "${NPINS.nixware}/framework/16-inch/7040-amd" ];
+  imports = [ "${DEPS.nixware}/framework/16-inch/7040-amd" ];
 
   config = {
     bs = {

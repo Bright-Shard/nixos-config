@@ -4,18 +4,12 @@
   ...
 }:
 
-with crux;
 let
   inherit (lib) mkOption types;
 in
+with crux;
 
 {
-  imports = [
-    ./custom-defaults.nix
-    ./containers
-    ./p2pool.nix
-  ];
-
   options = {
     # I put all my custom options in the "bs" namespace
     bs = {

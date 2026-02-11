@@ -2,16 +2,11 @@
 {
   crux,
   pkgs,
-  lib,
   config,
-  BUILD-META,
   ...
 }:
 
 with crux;
-let
-  inherit (lib) mkMerge mkIf;
-in
 
 mkMerge [
   # Boot & Kernel
@@ -33,10 +28,7 @@ mkMerge [
     security.unprivilegedUsernsClone = true;
   }
   (mkIf (!config.bs.apple-silicon) {
-    # boot.kernelPackages = pkgs.callPackage ../nixpkgs/kernel.nix { };
-    # TODO: Current Embark games (Arc Raiders & The Finals) break with
-    # linux-hardened. IDK why. just using the normal kernel for now...
-    boot.kernelPackages = pkgs.linuxPackages_latest;
+    boot.kernelPackages = pkgs.linuxPackages_hardened;
   })
 
   # Networking
@@ -414,9 +406,9 @@ mkMerge [
                 "quic://${host}.bs"
                 "tcp://${host}.bs"
               ];
-              id = BUILD-META.HOSTS.${host}.config.bs.syncthingId;
+              id = HOSTS.${host}.config.bs.syncthingId;
             };
-          }) (filter (host: host != BUILD-META.HOSTNAME) (attrNames BUILD-META.HOSTS))
+          }) (filter (host: host != HOSTNAME) (attrNames HOSTS))
         );
 
         folders =
@@ -462,11 +454,22 @@ mkMerge [
   {
     environment = {
       systemPackages = with pkgs; [ npins ];
-      shellAliases = {
+      shellAliases = rec {
         # pwn = "sudo nixos-container root-login pwnshell";
         # System update aliases
-        cfgupdate = "nixos-rebuild switch --file /etc/nixos --sudo";
-        sysupdate = "cp -r /etc/nixos/npins /etc/nixos/npins.bak; ${pkgs.npins}/bin/npins -d /etc/nixos/npins upgrade; ${pkgs.npins}/bin/npins -d /etc/nixos/npins update; cfgupdate";
+        cfg = "nixos-rebuild --file /etc/nixos --sudo";
+        cfgupdate = "${cfg} switch";
+        sysupdate =
+          let
+            base = "/etc/nixos/nix/deps";
+          in
+          ''
+            mkdir -p ${base}/npins.bak
+            cp ${base}/npins/* ${base}/npins.bak
+            ${pkgs.npins}/bin/npins -d ${base}/npins upgrade
+            ${pkgs.npins}/bin/npins -d ${base}/npins update
+            ${cfg} switch
+          '';
       };
     };
   }

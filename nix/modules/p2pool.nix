@@ -9,10 +9,10 @@
   ...
 }:
 
-with crux;
 let
   inherit (lib) mkOption types mkIf;
 in
+with crux;
 
 {
   options = {

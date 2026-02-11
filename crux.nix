@@ -1,9 +1,9 @@
-# Nix functions and constants that I globally import in every file.
+# Globals & constants everything else imports
 
 with builtins;
 
 builtins
-// {
+// rec {
   # Public keys
   KEYS = {
     PGP-PUBLIC = ''
@@ -37,6 +37,71 @@ builtins
   # You can still see `priv/default.nix` for what kind of data is stored, though
   PRIV = import ./priv;
 
+  # External deps
+  DEPS = import ./nix/deps;
+  PKGS = import DEPS.nixpkgs { };
+
+  # This entire NixOS config, stored in the NixOS store
+  FILESET =
+    with PKGS.lib.fileset;
+    let
+      blacklist = [
+        ./.git
+        ./.stfolder
+        ./.stignore
+        ./.gitignore
+      ];
+    in
+    toSource {
+      root = ./.;
+      fileset = fileFilter (file: !elem file blacklist) ./.;
+    };
+
+  # Hostname of the machine building the NixOS config
+  NATIVE-HOSTNAME = replaceStrings [ "\n" ] [ "" ] (readFile ./HOSTNAME);
+
+  # The NixOS configs for all hosts in `hosts/`
+  HOSTS =
+    let
+      hostNames = readSubdirs ./hosts;
+      buildCfg =
+        hostname:
+        DEPS.nixpkgs.lib.nixosSystem {
+          system = builtins.currentSystem;
+          specialArgs = {
+            crux = (import ./crux.nix) // {
+              HOSTNAME = hostname;
+            };
+          };
+          modules = concatLists [
+            (map (module: ./nix/modules/${module}) (attrNames (readDir ./nix/modules)))
+
+            (with DEPS; [
+              nixos-apple-silicon.nixosModules.apple-silicon-support
+              home-manager.nixosModules.home-manager
+              catppuccin.nixosModules.catppuccin
+              nix-flatpak.nixosModules.nix-flatpak
+              nix-minecraft.nixosModules.minecraft-servers
+              tangled.nixosModules.appview
+              tangled.nixosModules.knot
+              tangled.nixosModules.spindle
+            ])
+
+            [
+              ./configuration.nix
+              ./hosts/all.nix
+              ./hosts/${hostname}
+              ./hosts/${hostname}/hardware-configuration.nix
+            ]
+          ];
+        };
+      mkHost = hostName: {
+        name = hostName;
+        value = buildCfg hostName;
+      };
+    in
+    listToAttrs (map mkHost hostNames);
+
   # Returns a list of all subdirectories in the given path.
   readSubdirs =
     path:
@@ -44,6 +109,7 @@ builtins
       dirEntries = readDir path;
     in
     filter (entry: dirEntries.${entry} == "directory") (attrNames dirEntries);
+  inherit (PKGS.lib) mkMerge mkIf;
 
   # IANA reserved IP addresses
   # Useful both as notes and for firewall rules

@@ -1,5 +1,4 @@
 {
-  NPINS,
   pkgs,
   crux,
   ...
@@ -8,7 +7,7 @@
 with crux;
 
 {
-  imports = [ "${NPINS.nixware}/framework/desktop/amd-ai-max-300-series" ];
+  imports = [ "${DEPS.nixware}/framework/desktop/amd-ai-max-300-series" ];
 
   config = {
     networking.networkmanager.wifi.backend = "iwd";

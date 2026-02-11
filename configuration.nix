@@ -7,63 +7,60 @@
   crux,
   specialArgs,
   config,
-  NPINS,
-  BUILD-META,
   ...
-}@args:
+}:
 
-let
-  inherit (lib) mkMerge mkIf;
-in
 with crux;
 
 mkMerge [
   # Nix & Nixpkgs
   {
-    nixpkgs.config.allowUnfreePredicate =
-      pkg:
-      elem (lib.getName pkg) [
-        "osu-lazer-bin"
-        "1password"
-        "1password-cli"
-        "steam"
-        "steam-unwrapped"
-        "minecraft-server"
-        "binaryninja-free"
-      ];
+    nixpkgs.config = {
+      allowUnfreePredicate =
+        pkg:
+        elem (lib.getName pkg) [
+          "osu-lazer-bin"
+          "1password"
+          "1password-cli"
+          "steam"
+          "steam-unwrapped"
+          "minecraft-server"
+          "binaryninja-free"
+        ];
+    };
     nix = {
-      settings = {
-        experimental-features = [ "nix-command" ];
-        substituters =
-          # Self hosted binary cache
-          if !config.bs.apple-silicon && BUILD-META.NATIVE-HOST != "brilliance" then
-            [ "http://brilliance.bs:5000" ]
-          else
-            [ ];
-        trusted-public-keys =
-          # Self hosted binary cache
-          if BUILD-META.NATIVE-HOST != "brilliance" then
-            [ "brilliance:MOcBbGMoWZgVPATkKbqr0aKl/62yRX21syYAxtg7yWg=" ]
-          else
-            [ ];
-
-        extra-substituters = mkMerge [
-          [
-            # https://github.com/lopsided98/nix-ros-overlay
-            "https://ros.cachix.org"
-          ]
-          (mkIf config.bs.apple-silicon [
-            "https://nixos-apple-silicon.cachix.org"
-          ])
-        ];
-        extra-trusted-public-keys = [
-          # https://github.com/lopsided98/nix-ros-overlay
-          "ros.cachix.org-1:dSyZxI8geDCJrwgvCOHDoAfOm5sV1wCPjBkKL+38Rvo="
-          # https://github.com/nix-community/nixos-apple-silicon
-          "nixos-apple-silicon.cachix.org-1:8psDu5SA5dAD7qA0zMy5UT292TxeEPzIz8VVEr2Js20="
-        ];
-      };
-      nixPath = [ "nixpkgs=${NPINS.nixpkgs}" ];
+      settings =
+        let
+          substituters = [
+            # Self-hosted x86_64 binary cache
+            {
+              enable = !config.bs.apple-silicon && HOSTNAME != "brilliance";
+              url = "http://brilliance.bs:5000";
+              key = "brilliance:MOcBbGMoWZgVPATkKbqr0aKl/62yRX21syYAxtg7yWg=";
+            }
+            # Binary cache for https://github.com/lopsided98/nix-ros-overlay
+            {
+              enable = config.bs.ros;
+              url = "https://ros.cachix.org";
+              key = "ros.cachix.org-1:dSyZxI8geDCJrwgvCOHDoAfOm5sV1wCPjBkKL+38Rvo=";
+            }
+            {
+              enable = config.bs.apple-silicon;
+              url = "https://nixos-apple-silicon.cachix.org";
+              key = "nixos-apple-silicon.cachix.org-1:8psDu5SA5dAD7qA0zMy5UT292TxeEPzIz8VVEr2Js20=";
+            }
+          ];
+          enabledSubstituters = filter (sub: sub.enable) substituters;
+        in
+        {
+          substituters = map (sub: sub.url) enabledSubstituters;
+          trusted-public-keys = map (sub: sub.key) enabledSubstituters;
+          experimental-features = [ "nix-command" ];
+        };
+      nixPath = [
+        "nixpkgs=${DEPS.nixpkgs}"
+        "nixpkgs-overlays=${FILESET}/nix/overlays/default.nix"
+      ];
     };
     system.stateVersion = config.bs.state-version;
   }
@@ -100,39 +97,29 @@ mkMerge [
       };
     };
 
-    home-manager =
-      let
-        # Zen browser flake hackily imported in stable Nix
-        zen-browser = (import "${NPINS.zen-browser}/flake.nix").outputs {
-          self = zen-browser;
-          nixpkgs = pkgs;
-          home-manager = {
-            outPath = NPINS.home-manager;
-          };
-        };
-      in
-      {
-        useGlobalPkgs = true;
-        sharedModules = [
-          "${NPINS.catppuccin}/modules/home-manager"
-          zen-browser.homeModules.default
-          ./users/configuration.nix
-        ];
-        users =
-          let
-            allUsers = readSubdirs ./users;
-            users = filter (user: hasAttr user config.users.users) allUsers;
-          in
-          listToAttrs (
-            map (username: {
-              name = username;
-              value = ./users/${username};
-            }) users
-          );
-        extraSpecialArgs = specialArgs // {
-          nixosConfig = config;
-        };
+    home-manager = {
+      useGlobalPkgs = true;
+      sharedModules = [
+        "${DEPS.catppuccin}/modules/home-manager"
+        DEPS.zen-browser.homeModules.default
+        ./users/all.nix
+      ]
+      ++ (map (module: ./home-manager/modules/${module}) (attrNames (readDir ./home-manager/modules)));
+      users =
+        let
+          allUsers = readSubdirs ./users;
+          users = filter (user: hasAttr user config.users.users) allUsers;
+        in
+        listToAttrs (
+          map (username: {
+            name = username;
+            value = ./users/${username};
+          }) users
+        );
+      extraSpecialArgs = specialArgs // {
+        nixosConfig = config;
       };
+    };
   }
 
   # Packages
@@ -167,7 +154,6 @@ mkMerge [
       noto-fonts-emoji-blob-bin
     ];
   }
-  (mkMerge (map (dirEntry: import ./programs/${dirEntry} args) (attrNames (readDir ./programs))))
 
   # Security key
   {
@@ -190,7 +176,7 @@ mkMerge [
   # Other random shit
   {
     networking = {
-      hostName = BUILD-META.HOSTNAME;
+      hostName = HOSTNAME;
     };
 
     i18n.defaultLocale = "en_US.UTF-8";

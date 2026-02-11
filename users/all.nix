@@ -14,8 +14,6 @@ in
 with crux;
 
 {
-  imports = map (dirEntry: ./programs/${dirEntry}) (attrNames (readDir ./programs));
-
   config = {
     home = {
       packages = with pkgs; [
