@@ -5,9 +5,16 @@ with crux;
 
 let
   npins = import ./npins;
-  flake-compat = import "${npins.flake-compat}";
+  flake-compat = import ./flake-compat;
   mapped-flakes = mapAttrs (
-    k: v: if pathExists "${v}/flake.nix" then (flake-compat { src = v; }).defaultNix else v
+    k: v:
+    if pathExists "${v}/flake.nix" then
+      (flake-compat {
+        src = v;
+        follows = DEPS;
+      })
+    else
+      v
   ) npins;
 in
 mapped-flakes

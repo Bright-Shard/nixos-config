@@ -58,7 +58,7 @@ mkMerge [
           experimental-features = [ "nix-command" ];
         };
       nixPath = [
-        "nixpkgs=${DEPS.nixpkgs}"
+        # "nixpkgs=${DEPS.nixpkgs}"
         "nixpkgs-overlays=${FILESET}/nix/overlays/default.nix"
       ];
     };
@@ -100,7 +100,7 @@ mkMerge [
     home-manager = {
       useGlobalPkgs = true;
       sharedModules = [
-        "${DEPS.catppuccin}/modules/home-manager"
+        DEPS.catppuccin.homeModules.default
         DEPS.zen-browser.homeModules.default
         ./users/all.nix
       ]

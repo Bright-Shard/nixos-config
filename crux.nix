@@ -39,7 +39,7 @@ builtins
 
   # External deps
   DEPS = import ./nix/deps;
-  PKGS = import DEPS.nixpkgs { };
+  PKGS = DEPS.nixpkgs.legacyPackages.${currentSystem};
 
   # This entire NixOS config, stored in the NixOS store
   FILESET =

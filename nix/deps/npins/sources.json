@@ -13,22 +13,6 @@
       "url": "https://github.com/catppuccin/nix/archive/db4dfe3f2a80e9c33492d839accd49f75c7324c2.tar.gz",
       "hash": "sha256-+cS5yXWsSLiK36+PP/+dcQdxpXSclx2d65p7l6Dis+A="
     },
-    "flake-compat": {
-      "type": "GitRelease",
-      "repository": {
-        "type": "GitHub",
-        "owner": "NixOS",
-        "repo": "flake-compat"
-      },
-      "pre_releases": false,
-      "version_upper_bound": null,
-      "release_prefix": null,
-      "submodules": false,
-      "version": "v1.1.0",
-      "revision": "ff81ac966bb2cae68946d5ed5fc4994f96d0ffec",
-      "url": "https://api.github.com/repos/NixOS/flake-compat/tarball/refs/tags/v1.1.0",
-      "hash": "sha256-NeCCThCEP3eCl2l/+27kNNK7QrwZB1IJCrXfrbv5oqU="
-    },
     "fx-autoconfig": {
       "type": "Git",
       "repository": {
@@ -64,9 +48,9 @@
       },
       "branch": "master",
       "submodules": false,
-      "revision": "0acbd1180697de56724821184ad2c3e6e7202cd7",
-      "url": "https://github.com/nix-community/home-manager/archive/0acbd1180697de56724821184ad2c3e6e7202cd7.tar.gz",
-      "hash": "sha256-DYS4jIRpRoKOzJjnR/QqEd/MlT4OZZpt8CrBLv+cjsE="
+      "revision": "6a1f7101d2c3ee87d485a87880d73b4665c6a4bd",
+      "url": "https://github.com/nix-community/home-manager/archive/6a1f7101d2c3ee87d485a87880d73b4665c6a4bd.tar.gz",
+      "hash": "sha256-ZwU5wXKNqpOQvjNz6aBp1j5peiBZow1++6pLnk5VAhs="
     },
     "nix-flatpak": {
       "type": "GitRelease",
@@ -93,9 +77,9 @@
       },
       "branch": "master",
       "submodules": false,
-      "revision": "b32f4325880b4fac47b8736161a8f032dd248b70",
-      "url": "https://github.com/Infinidoge/nix-minecraft/archive/b32f4325880b4fac47b8736161a8f032dd248b70.tar.gz",
-      "hash": "sha256-ks1ZFBYlBmQ4CAM4WSmCFUtkUJzbmJ0VJH/JkKVMPqY="
+      "revision": "ca04d472340d6a3c8fe4f4a9c0d74faad048c204",
+      "url": "https://github.com/Infinidoge/nix-minecraft/archive/ca04d472340d6a3c8fe4f4a9c0d74faad048c204.tar.gz",
+      "hash": "sha256-VsRzFJ8+ndGgcwguZSQGHed/gragpW478qMqdNpm75k="
     },
     "nix-ros-overlay": {
       "type": "Git",
@@ -126,8 +110,8 @@
     "nixpkgs": {
       "type": "Channel",
       "name": "nixpkgs-unstable",
-      "url": "https://releases.nixos.org/nixpkgs/nixpkgs-26.05pre944414.c05d2232d2fe/nixexprs.tar.xz",
-      "hash": "sha256-QMYxyB6ypW27ndRESrqrJyB9kXqZs9rQIsmDRyvX0lA="
+      "url": "https://releases.nixos.org/nixpkgs/nixpkgs-26.05pre944764.2343bbb58f99/nixexprs.tar.xz",
+      "hash": "sha256-9SFCZkVcpDOV6unH5hVEy4+dB0rxMuUoBnDAO6vshac="
     },
     "nixware": {
       "type": "Git",
@@ -138,9 +122,9 @@
       },
       "branch": "master",
       "submodules": false,
-      "revision": "2889685785848de940375bf7fea5e7c5a3c8d502",
-      "url": "https://github.com/NixOS/nixos-hardware/archive/2889685785848de940375bf7fea5e7c5a3c8d502.tar.gz",
-      "hash": "sha256-b7iK/x+zOXbjhRqa+XBlYla4zFvPZyU5Ln2HJkiSnzc="
+      "revision": "af04cb78aa85b2a4d1c15fc7270347e0d0eda97b",
+      "url": "https://github.com/NixOS/nixos-hardware/archive/af04cb78aa85b2a4d1c15fc7270347e0d0eda97b.tar.gz",
+      "hash": "sha256-nw5g+xl3veea+maxJ2/81tMEA/rPq9aF1H5XF35X+OE="
     },
     "tangled": {
       "type": "Git",
@@ -150,9 +134,9 @@
       },
       "branch": "master",
       "submodules": false,
-      "revision": "e17836203f86a090a9f663d54f3cde82fb57a29d",
+      "revision": "e11751cd3366e288734165632af69f7bd32c96dd",
       "url": null,
-      "hash": "sha256-USZxj9C74gPROHaKJbWooI1ABjGbYnL3Jj1o84xUfmo="
+      "hash": "sha256-fZEuGuBDcWxcClkXw2DniRFPREC2z9HoYROmFqzLH4Y="
     },
     "zen-browser": {
       "type": "Git",
@@ -163,9 +147,9 @@
       },
       "branch": "main",
       "submodules": false,
-      "revision": "db14437f8667f7f09784e2a4e73c105bdc1c7023",
-      "url": "https://github.com/0xc000022070/zen-browser-flake/archive/db14437f8667f7f09784e2a4e73c105bdc1c7023.tar.gz",
-      "hash": "sha256-3ZRA2+o5p1+FKWx988WbwB1SQ2Mz5aL95zxhL5iD+O0="
+      "revision": "0078cf2d5e81eb56a9356d51f2738f7141194de1",
+      "url": "https://github.com/0xc000022070/zen-browser-flake/archive/0078cf2d5e81eb56a9356d51f2738f7141194de1.tar.gz",
+      "hash": "sha256-iJ9c0ZewfRRYUflaEOj43n5TWaB6Ezygn2UA/ZHGQJA="
     }
   },
   "version": 7
