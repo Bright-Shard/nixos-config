@@ -11,4 +11,6 @@ with builtins;
   # SERVER = { WHITELIST = <whitelist>; OPS = <operators>; };
   # ```
   MC = import ./mc.nix;
+  # Registration token for my Matrix homeserver
+  MATRIX-REGISTRATION-TOKEN = readFile ./matrix-registration-token.txt;
 }

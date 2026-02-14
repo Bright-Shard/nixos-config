@@ -58,7 +58,7 @@ mkMerge [
           experimental-features = [ "nix-command" ];
         };
       nixPath = [
-        # "nixpkgs=${DEPS.nixpkgs}"
+        "nixpkgs=${DEPS.nixpkgs.outPath}"
         "nixpkgs-overlays=${FILESET}/nix/overlays/default.nix"
       ];
     };

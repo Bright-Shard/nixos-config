@@ -126,18 +126,6 @@
       "url": "https://github.com/NixOS/nixos-hardware/archive/af04cb78aa85b2a4d1c15fc7270347e0d0eda97b.tar.gz",
       "hash": "sha256-nw5g+xl3veea+maxJ2/81tMEA/rPq9aF1H5XF35X+OE="
     },
-    "tangled": {
-      "type": "Git",
-      "repository": {
-        "type": "Git",
-        "url": "https://tangled.org/tangled.org/core"
-      },
-      "branch": "master",
-      "submodules": false,
-      "revision": "e11751cd3366e288734165632af69f7bd32c96dd",
-      "url": null,
-      "hash": "sha256-fZEuGuBDcWxcClkXw2DniRFPREC2z9HoYROmFqzLH4Y="
-    },
     "zen-browser": {
       "type": "Git",
       "repository": {

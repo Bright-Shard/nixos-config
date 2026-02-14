@@ -18,13 +18,7 @@ let
     anubis = 2000;
     anubisPassed = 2001;
 
-    pds = 3000;
-    tangled = {
-      knot = 3001;
-      knotInternal = 3002;
-      appview = 3003;
-      spindle = 3004;
-    };
+    matrix = 3000;
 
     headscale = 4000;
   };
@@ -69,25 +63,26 @@ lib.mkMerge [
       # Ports open on every interface
       openGlobalPorts = {
         tcp = [
-          18080 # Monero node
-          37889 # p2pool node
           80 # Caddy
           443 # Caddy
+          8448 # Matrix federation
+          18080 # Monero node
           25565 # Minecraft server
           25566 # avr Minecraft server
+          37889 # p2pool node
         ];
         udp = [
-          24454 # Proximity chat for Minecraft server
           5520 # Hytale btw
+          24454 # Proximity chat for Minecraft server
         ];
       };
       openInterfacePorts = {
         # Ports to expose to my tailnet
         tailscale0 = {
           tcp = [
-            18081 # Monero node RPC
             3333 # p2pool Stratum
             5000 # Nix binary cache
+            18081 # Monero node RPC
           ];
           udp = [ ];
         };
@@ -125,40 +120,16 @@ lib.mkMerge [
           }
         }
 
-        # atproto services
-        pds.brightshard.dev {
-          reverse_proxy http://localhost:${pds}
-        }
-        http://git.brightshard.dev:${anubisPassed} {
-          reverse_proxy http://localhost:${tangled.appview}
-        }
-        git.brightshard.dev/oauth/* {
-          reverse_proxy http://localhost:${tangled.appview}
-        }
-        git.brightshard.dev {
-          reverse_proxy http://localhost:${anubis} {
-            header_up X-Real-Ip {remote_host}
-            header_up X-Http-Version {http.request.proto}
+        brightshard.dev, brightshard.dev:8448 {
+          # Matrix homeserver
+          @matrix path /_matrix* /_tuwunel*
+          handle @matrix {
+            reverse_proxy http://localhost:${matrix}
           }
-        }
-        knot.tangled.brightshard.dev {
-          reverse_proxy http://localhost:${tangled.knot}
-        }
-        knot.tangled.brightshard.dev/events {
-          reverse_proxy http://localhost:${tangled.knot} {
-            header_up X-Forwaded-For {remote_host}
-            header_up Upgrade websocket
-            header_up Connection Upgrade
-          }
-        }
-        spindle.tangled.brightshard.dev {
-          reverse_proxy http://localhost:${tangled.spindle}
-        }
-        spindle.tangled.brightshard.dev/events {
-          reverse_proxy http://localhost:${tangled.spindle} {
-            header_up X-Forwaded-For {remote_host}
-            header_up Upgrade websocket
-            header_up Connection Upgrade
+
+          # Website
+          handle {
+            redir https://www.brightshard.dev{uri}
           }
         }
       '';
@@ -205,94 +176,21 @@ lib.mkMerge [
     };
   }
 
-  # atproto services
-  # Allocated ports 3000->3100
+  # Matrix
   {
-    services = {
-      bluesky-pds = {
-        enable = true;
-        settings = rec {
-          PDS_PORT = 3000;
-          PDS_HOSTNAME = "pds.brightshard.dev";
-          PDS_ADMIN_EMAIL = "pds@brightshard.dev";
-          PDS_DATA_DIRECTORY = "/srv/pds";
-          STATE_DIRECTORY = PDS_DATA_DIRECTORY;
-          PDS_BLOBSTORE_DISK_LOCATION = "${PDS_DATA_DIRECTORY}/blocks";
-          PDS_BLOBSTORE_DISK_TMP_LOCATION = "/tmp/pds-blockstore-tmp";
-          PDS_ACCOUNT_DB_LOCATION = "${PDS_DATA_DIRECTORY}/account.sqlite";
-          PDS_SEQUENCER_DB_LOCATION = "${PDS_DATA_DIRECTORY}/sequencer.sqlite";
-          PDS_DID_CACHE_DB_LOCATION = "${PDS_DATA_DIRECTORY}/did_cache.sqlite";
-          PDS_INVITE_REQUIRED = "true";
-        };
-        environmentFiles = [ "/srv/pds/.env" ];
+    services.matrix-tuwunel = {
+      enable = true;
+      user = "matrix";
+      group = "matrix";
+      settings.global = {
+        server_name = "brightshard.dev";
+        port = [ PORTS_INT.matrix ];
+        allow_registration = true;
+        registration_token = PRIV.MATRIX-REGISTRATION-TOKEN;
+        encryption_enabled_by_default_for_room_type = "all";
+        new_user_displayname_suffix = "";
       };
-
-      tangled =
-        let
-          dataDir = "/srv/tangled";
-          owner = "did:plc:knlrj2kb4xvwhx7ugip6e6p2";
-        in
-        {
-          knot = {
-            enable = true;
-            # appviewEndpoint = appviewUrl;
-            appviewEndpoint = "https://tangled.org";
-            openFirewall = false; # I manage it myself
-            stateDir = dataDir;
-            server = {
-              listenAddr = "localhost:${PORTS.tangled.knot}";
-              internalListenAddr = "localhost:${PORTS.tangled.knotInternal}";
-              hostname = "knot.tangled.brightshard.dev";
-              inherit owner;
-            };
-          };
-          appview = {
-            enable = false;
-            port = PORTS_INT.tangled.appview;
-            listenAddr = "localhost:${PORTS.tangled.appview}";
-            dbPath = "${dataDir}/appview.db";
-            appviewHost = "git.brightshard.dev";
-            appviewName = "BrightShard's Tangled Instance";
-            environmentFile = "${dataDir}/appview.env";
-          };
-          spindle = {
-            enable = true;
-            server = {
-              listenAddr = "localhost:${PORTS.tangled.spindle}";
-              dbPath = "${dataDir}/spindle.db";
-              hostname = "spindle.tangled.brightshard.dev";
-              inherit owner;
-              maxJobCount = 8;
-            };
-          };
-        };
     };
-    systemd.services =
-      let
-        tangledCfg = {
-          User = "git";
-          Group = "git";
-          WorkingDirectory = lib.mkForce "/srv/tangled";
-          ReadWritePaths = lib.mkForce [ "/srv/tangled" ];
-        };
-      in
-      {
-        bluesky-pds =
-          let
-            dataDir = config.services.bluesky-pds.settings.PDS_DATA_DIRECTORY;
-          in
-          {
-            serviceConfig = {
-              User = "pds";
-              Group = "pds";
-              StateDirectory = lib.mkForce null;
-            };
-            unitConfig.RequiresMountsFor = dataDir;
-          };
-        knot.serviceConfig = tangledCfg;
-        # appview.serviceConfig = tangledCfg;
-        spindle.serviceConfig = tangledCfg;
-      };
   }
 
   # Headscale
@@ -495,8 +393,7 @@ lib.mkMerge [
           (u "caddy" "caddy")
           (u "discord" "discord-bots")
           (u "hytale" "hytale")
-          (u "git" "git")
-          (u "pds" "pds")
+          (u "matrix" "matrix")
         ];
       in
       lib.mkMerge [
@@ -508,8 +405,7 @@ lib.mkMerge [
         {
           # Additional user packages
           users = with pkgs; {
-            git.packages = [ tangled.goat ];
-            pds.packages = [ atproto-goat ];
+            matrix.packages = [ matrix-tuwunel ];
           };
         }
       ];

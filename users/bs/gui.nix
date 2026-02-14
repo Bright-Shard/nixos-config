@@ -44,6 +44,7 @@ in
           signal-desktop
           obs-studio
           obs-studio-plugins.input-overlay
+          libreoffice
 
           # Utilities
           brightnessctl

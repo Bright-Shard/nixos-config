@@ -39,6 +39,7 @@ with crux;
         jq
         inotify-tools
         tokei
+        neovim
       ];
 
       sessionVariables = {

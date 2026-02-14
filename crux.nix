@@ -82,9 +82,6 @@ builtins
               catppuccin.nixosModules.catppuccin
               nix-flatpak.nixosModules.nix-flatpak
               nix-minecraft.nixosModules.minecraft-servers
-              tangled.nixosModules.appview
-              tangled.nixosModules.knot
-              tangled.nixosModules.spindle
             ])
 
             [
