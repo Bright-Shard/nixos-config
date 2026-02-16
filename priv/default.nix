@@ -13,4 +13,5 @@ with builtins;
   MC = import ./mc.nix;
   # Registration token for my Matrix homeserver
   MATRIX-REGISTRATION-TOKEN = readFile ./matrix-registration-token.txt;
+  COTURN-AUTH-SECRET = readFile ./coturn-auth-secret.txt;
 }

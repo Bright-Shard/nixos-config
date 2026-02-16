@@ -1,7 +1,6 @@
 {
   crux,
   pkgs,
-  config,
   lib,
   ...
 }:
@@ -19,6 +18,8 @@ let
     anubisPassed = 2001;
 
     matrix = 3000;
+    coturn1 = 3478;
+    coturn2 = 5349;
 
     headscale = 4000;
   };
@@ -59,7 +60,7 @@ lib.mkMerge [
     # Connect to my hoppy.network server for port forwarding
     networking.wireguard.interfaces.hoppy = PRIV.HOPPY;
 
-    bs.firewall = {
+    bs.firewall = with PORTS_INT; {
       # Ports open on every interface
       openGlobalPorts = {
         tcp = [
@@ -70,10 +71,14 @@ lib.mkMerge [
           25565 # Minecraft server
           25566 # avr Minecraft server
           37889 # p2pool node
+          coturn1
+          coturn2
         ];
         udp = [
           5520 # Hytale btw
           24454 # Proximity chat for Minecraft server
+          coturn1
+          coturn2
         ];
       };
       openInterfacePorts = {
@@ -189,7 +194,18 @@ lib.mkMerge [
         registration_token = PRIV.MATRIX-REGISTRATION-TOKEN;
         encryption_enabled_by_default_for_room_type = "all";
         new_user_displayname_suffix = "";
+        turn_uris = [
+          "turn:brightshard.dev?transport=udp"
+          "turn:brightshard.dev?transport=tcp"
+        ];
+        turn_secret = PRIV.COTURN-AUTH-SECRET;
       };
+    };
+    services.coturn = {
+      enable = true;
+      use-auth-secret = true;
+      static-auth-secret = PRIV.COTURN-AUTH-SECRET;
+      realm = "brightshard.dev";
     };
   }
 

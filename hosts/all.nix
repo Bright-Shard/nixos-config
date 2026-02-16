@@ -28,7 +28,7 @@ mkMerge [
     security.unprivilegedUsernsClone = true;
   }
   (mkIf (!config.bs.apple-silicon) {
-    boot.kernelPackages = pkgs.linuxPackages_hardened;
+    boot.kernelPackages = pkgs.linuxPackages_latest;
   })
 
   # Networking

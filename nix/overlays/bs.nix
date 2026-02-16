@@ -55,7 +55,6 @@ with crux;
   };
 
   helium = DEPS.helium-nix.packages.${currentSystem}.helium;
-  tangled = DEPS.tangled.overlays.default final prev;
 
   # Compat for flakes
   legacyPackages = lib.genAttrs lib.systems.flakeExposed (system: pkgs);

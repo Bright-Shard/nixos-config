@@ -57,10 +57,11 @@ mkMerge [
           trusted-public-keys = map (sub: sub.key) enabledSubstituters;
           experimental-features = [ "nix-command" ];
         };
-      nixPath = [
-        "nixpkgs=${DEPS.nixpkgs.outPath}"
-        "nixpkgs-overlays=${FILESET}/nix/overlays/default.nix"
-      ];
+      nixPath =
+        let
+          entries = map (replaceStrings [ ".nix" ] [ "" ]) (attrNames (readDir ./nix/path));
+        in
+        map (entry: "${entry}=${FILESET}/nix/path/${entry}.nix") entries;
     };
     system.stateVersion = config.bs.state-version;
   }

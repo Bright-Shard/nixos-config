@@ -1,8 +1,9 @@
 let
   crux = import ../../crux.nix;
 in
-with crux.DEPS;
+with crux;
+
 [
   (import ./bs.nix)
-  nix-ros-overlay.overlays.default
+  DEPS.nix-ros-overlay.overlays.default
 ]

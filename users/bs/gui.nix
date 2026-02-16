@@ -60,6 +60,7 @@ in
           prismlauncher
           heroic
           r2modman
+          protonplus
 
           # Dev stuff
           binaryninja-free
