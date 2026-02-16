@@ -3,7 +3,6 @@
 
 {
   pkgs,
-  lib,
   crux,
   specialArgs,
   config,
@@ -15,19 +14,6 @@ with crux;
 mkMerge [
   # Nix & Nixpkgs
   {
-    nixpkgs.config = {
-      allowUnfreePredicate =
-        pkg:
-        elem (lib.getName pkg) [
-          "osu-lazer-bin"
-          "1password"
-          "1password-cli"
-          "steam"
-          "steam-unwrapped"
-          "minecraft-server"
-          "binaryninja-free"
-        ];
-    };
     nix = {
       settings =
         let

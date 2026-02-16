@@ -1,12 +1,8 @@
 # Fetches dependencies from a version 7 `flake.lock`.
 
-let
-  crux = import ../../../crux.nix;
-in
-with crux;
-
 {
   lock,
+  pkgs,
   ...
 }:
 
@@ -19,13 +15,13 @@ let
   ty = dep.type;
   fetcher =
     if ty == "file" then
-      PKGS.fetchurl
+      pkgs.fetchurl
     else if ty == "github" then
-      PKGS.fetchFromGitHub
+      pkgs.fetchFromGitHub
     else if ty == "git" then
-      PKGS.fetchgit
+      pkgs.fetchgit
     else if ty == "tarball" then
-      PKGS.fetchzip
+      pkgs.fetchzip
     else
       throw "TODO: `flake.lock` v7 dependency type ${ty}";
   args = removeAttrs dep [

@@ -3,6 +3,8 @@
 # However this one respects `inputs.x.follows` settings and lets you specify
 # follow deps from stable nix
 
+pkgs:
+
 {
   src,
   follows ? { },
@@ -19,7 +21,7 @@ let
         lock = fromJSON (readFile "${src}/flake.lock");
         fetchFromLock =
           if lock.version == 7 then
-            import ./lock-v7.nix { inherit flake lock; }
+            import ./lock-v7.nix { inherit flake lock pkgs; }
           else
             throw "Unsupported lockfile version ${lock.version} from flake ${src}";
 
@@ -36,7 +38,7 @@ let
               src = fetchFromLock input;
             in
             if cfg.flake or true then
-              import ./. {
+              import ./. pkgs {
                 inherit src;
                 follows = mapAttrs parseFollows (cfg.inputs or { });
               }

@@ -39,11 +39,10 @@ builtins
 
   # External deps
   DEPS = import ./nix/deps;
-  PKGS = DEPS.nixpkgs.legacyPackages.${currentSystem};
 
   # This entire NixOS config, stored in the NixOS store
   FILESET =
-    with PKGS.lib.fileset;
+    with DEPS.nixpkgs.lib.fileset;
     let
       blacklist = [
         ./.git
@@ -66,8 +65,9 @@ builtins
       hostNames = readSubdirs ./hosts;
       buildCfg =
         hostname:
-        DEPS.nixpkgs.lib.nixosSystem {
+        DEPS.nixpkgs-flake.lib.nixosSystem {
           system = builtins.currentSystem;
+          pkgs = DEPS.nixpkgs;
           specialArgs = {
             crux = (import ./crux.nix) // {
               HOSTNAME = hostname;
@@ -106,7 +106,7 @@ builtins
       dirEntries = readDir path;
     in
     filter (entry: dirEntries.${entry} == "directory") (attrNames dirEntries);
-  inherit (PKGS.lib) mkMerge mkIf;
+  inherit (DEPS.nixpkgs.lib) mkMerge mkIf;
 
   # IANA reserved IP addresses
   # Useful both as notes and for firewall rules
