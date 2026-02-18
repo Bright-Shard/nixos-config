@@ -108,6 +108,17 @@ builtins
     filter (entry: dirEntries.${entry} == "directory") (attrNames dirEntries);
   inherit (DEPS.nixpkgs.lib) mkMerge mkIf;
 
+  # Amount of bytes stored in various memory sizes.
+  MEMSIZE = rec {
+    KiB = 1024;
+    MiB = 1024 * KiB;
+    GiB = 1024 * MiB;
+
+    KB = 1000;
+    MB = 1000 * KB;
+    GB = 1000 * MB;
+  };
+
   # IANA reserved IP addresses
   # Useful both as notes and for firewall rules
   RESERVED-IPS = {

@@ -199,6 +199,7 @@ lib.mkMerge [
           "turn:brightshard.dev?transport=tcp"
         ];
         turn_secret = PRIV.COTURN-AUTH-SECRET;
+        max_request_size = 10 * MEMSIZE.GiB;
       };
     };
     services.coturn = {

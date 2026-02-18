@@ -48,9 +48,9 @@
       },
       "branch": "master",
       "submodules": false,
-      "revision": "6a1f7101d2c3ee87d485a87880d73b4665c6a4bd",
-      "url": "https://github.com/nix-community/home-manager/archive/6a1f7101d2c3ee87d485a87880d73b4665c6a4bd.tar.gz",
-      "hash": "sha256-ZwU5wXKNqpOQvjNz6aBp1j5peiBZow1++6pLnk5VAhs="
+      "revision": "ae8003d8b61d0d373e7ca3da1a48f9c870d15df9",
+      "url": "https://github.com/nix-community/home-manager/archive/ae8003d8b61d0d373e7ca3da1a48f9c870d15df9.tar.gz",
+      "hash": "sha256-qLXxN/tPrZtnekaLBQuVtxQfvqqs5cT5WbyH4zZaTGI="
     },
     "nix-flatpak": {
       "type": "GitRelease",
@@ -103,15 +103,15 @@
       },
       "branch": "main",
       "submodules": false,
-      "revision": "f2936008b132717d7cc4616bbac56f7478bb0a58",
-      "url": "https://github.com/nix-community/nixos-apple-silicon/archive/f2936008b132717d7cc4616bbac56f7478bb0a58.tar.gz",
-      "hash": "sha256-/fhL3g+Rp16vvsNPijhLgBuZeYCv7VJr6OTJpA0ZRnw="
+      "revision": "357186cca0f4c7801ff16970e4b6a05e74fd88e0",
+      "url": "https://github.com/nix-community/nixos-apple-silicon/archive/357186cca0f4c7801ff16970e4b6a05e74fd88e0.tar.gz",
+      "hash": "sha256-0RYmnOk40U4ZGbW/+3rHlNndrsuHCz9h+xequKWgwHQ="
     },
     "nixpkgs": {
       "type": "Channel",
       "name": "nixpkgs-unstable",
-      "url": "https://releases.nixos.org/nixpkgs/nixpkgs-26.05pre944764.2343bbb58f99/nixexprs.tar.xz",
-      "hash": "sha256-9SFCZkVcpDOV6unH5hVEy4+dB0rxMuUoBnDAO6vshac="
+      "url": "https://releases.nixos.org/nixpkgs/nixpkgs-26.05pre946663.e3cb16bccd9f/nixexprs.tar.xz",
+      "hash": "sha256-VlfaC6fMRQml69frXVZ9ysuVEumYY3oWBE+16pIHTno="
     },
     "nixware": {
       "type": "Git",
@@ -122,9 +122,9 @@
       },
       "branch": "master",
       "submodules": false,
-      "revision": "af04cb78aa85b2a4d1c15fc7270347e0d0eda97b",
-      "url": "https://github.com/NixOS/nixos-hardware/archive/af04cb78aa85b2a4d1c15fc7270347e0d0eda97b.tar.gz",
-      "hash": "sha256-nw5g+xl3veea+maxJ2/81tMEA/rPq9aF1H5XF35X+OE="
+      "revision": "531af1dbaee7cfdd7aed1e595ce418b7e2e99a80",
+      "url": "https://github.com/NixOS/nixos-hardware/archive/531af1dbaee7cfdd7aed1e595ce418b7e2e99a80.tar.gz",
+      "hash": "sha256-ngIarpog/Hv5r9M1YyvsaaSUBCqtWqHl6pibq6n2ppo="
     },
     "zen-browser": {
       "type": "Git",
@@ -135,9 +135,9 @@
       },
       "branch": "main",
       "submodules": false,
-      "revision": "0078cf2d5e81eb56a9356d51f2738f7141194de1",
-      "url": "https://github.com/0xc000022070/zen-browser-flake/archive/0078cf2d5e81eb56a9356d51f2738f7141194de1.tar.gz",
-      "hash": "sha256-iJ9c0ZewfRRYUflaEOj43n5TWaB6Ezygn2UA/ZHGQJA="
+      "revision": "cc8680395c8a65e4fde23372ef851671ff04947f",
+      "url": "https://github.com/0xc000022070/zen-browser-flake/archive/cc8680395c8a65e4fde23372ef851671ff04947f.tar.gz",
+      "hash": "sha256-tuE8yVny/RPIZ8Em1R3lyy4tWOB06YuHTh5qBH/tEnU="
     }
   },
   "version": 7

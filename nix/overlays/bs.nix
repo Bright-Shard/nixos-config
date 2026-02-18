@@ -56,8 +56,6 @@ with crux;
 
   helium = DEPS.helium-nix.packages.${currentSystem}.helium;
 
-  # Compat for flakes
-  legacyPackages = lib.genAttrs lib.systems.flakeExposed (system: pkgs);
   # idk the ros overlay gets mad without this
   tbb_2021_11 = prev.onetbb;
 }
